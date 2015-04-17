@@ -4,15 +4,16 @@ public class CollisionManager {
 	private boolean enemyHit = false; 
 	private boolean wallHit = false;
 	
+	
 	public boolean isWallHit() {
-		return enemyHit;
+		return false;
 	}
 	
 	public boolean isEnemyHit() {
-		return enemyHit;
+		return false;
 	}
 
-	public CollisionManager(){
+	public CollisionManager( ){
 		
 	}
 	

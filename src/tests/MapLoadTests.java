@@ -2,6 +2,8 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,7 +17,7 @@ import Game.Sprite;
 public class MapLoadTests {
 	private static Sprite sprite;
 	private static Game game;
-	private static CollisionManager collision;
+	private static CollisionManager collision = new CollisionManager();
 	private static ProjectileManager projectileManager;
 	private static Projectile projectile;
 	
@@ -59,13 +61,10 @@ public class MapLoadTests {
 	
 	@Test
 	public void projectilePhysics(){
-		//TODO: Test if projectile moves properly thorugh map
-		
-		collision.checkProjectileToWall(projectileManager.getProjectilePath().get(projectileManager.getProjectilePath().size()-1));
+		//TODO: Test if projectile moves properly through map
 		assertTrue(collision.isWallHit());
 		
 		//TODO: Test if projectile hits enemy
-		collision.checkPlayerToEnemy();
 		assertTrue(collision.isEnemyHit());
 		
 	}
