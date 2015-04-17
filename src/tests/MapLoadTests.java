@@ -35,8 +35,8 @@ public class MapLoadTests {
 	@Test
 	public void testWallLocations() {
 		//TODO: Test locations of some specific walls
-		//assertTrue(wall.isWall(0,0));
-		//assertTrue(wall.isWall(0,1));
+		assertTrue(sprite.isWall(0,0));
+		assertTrue(sprite.isWall(0,1));
 		
 		//TODO: add number of total walls
 		assertEquals(sprite.getNumWalls(), 125); // This was the number of walls I counted

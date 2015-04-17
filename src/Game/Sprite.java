@@ -20,4 +20,9 @@ public class Sprite {
 		
 		return 0;
 	}
+	
+	public boolean isWall(int row, int column){
+		
+		return false;
+	}
 }

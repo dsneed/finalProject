@@ -6,9 +6,5 @@ public Wall(){
 	
 }
 
-public boolean isWall(int row, int column){
-	
-	return false;
-}
 
 }
