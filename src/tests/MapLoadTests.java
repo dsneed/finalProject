@@ -5,30 +5,37 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import Game.CollisionManager;
 import Game.Game;
+import Game.Projectile;
+import Game.ProjectileManager;
 import Game.Sprite;
-import Game.Wall;
 
 
 public class MapLoadTests {
-	private Sprite sprite = new Sprite();
+	private static Sprite sprite;
 	private static Game game;
-	private Wall wall;
+	private static CollisionManager collision;
+	private static ProjectileManager projectileManager;
+	private static Projectile projectile;
 	
 	public static final int NUM_ROWS = 19;
 	public static final int NUM_COLUMNS = 33;
 	
 	@BeforeClass
 	public static void setUp() {
-		Game game = new Game("TestLevel.csv");
-		//sprite = new Sprite();
+		game = new Game("TestLevel.csv");
+		sprite = new Sprite();
+		
 	}
 
 	@Test
 	public void testLevelDimensions() {
-		assertEquals(NUM_ROWS, sprite.getNumRows());
-		assertEquals(NUM_COLUMNS, sprite.getNumColumns());
-		int totalCells = sprite.getNumRows() * sprite.getNumColumns();
+		
+		//TODO: Test to see the board is expected size
+		assertEquals(NUM_ROWS, game.getNumRows());
+		assertEquals(NUM_COLUMNS, game.getNumColumns());
+		int totalCells = game.getNumRows() * game.getNumColumns();
 		assertEquals(627, totalCells);
 	}
 	
@@ -36,10 +43,31 @@ public class MapLoadTests {
 	public void testWallLocations() {
 		//TODO: Test locations of some specific walls
 		assertTrue(sprite.isWall(0,0));
+		assertTrue(sprite.isWall(1,0));
 		assertTrue(sprite.isWall(0,1));
+		assertTrue(sprite.isWall(4,25));
 		
-		//TODO: add number of total walls
+		//TODO: Test the locations of the non-walls
+		assertFalse(sprite.isWall(2,2));
+		assertFalse(sprite.isWall(10,10));
+		assertFalse(sprite.isWall(15,12));
+		assertFalse(sprite.isWall(4,26));
+		
+		//TODO: Test number of total walls
 		assertEquals(sprite.getNumWalls(), 125); // This was the number of walls I counted
+	}
+	
+	@Test
+	public void projectilePhysics(){
+		//TODO: Test if projectile moves properly thorugh map
+		
+		collision.checkProjectileToWall(projectileManager.getProjectilePath().get(projectileManager.getProjectilePath().size()-1));
+		assertTrue(collision.isWallHit());
+		
+		//TODO: Test if projectile hits enemy
+		collision.checkPlayerToEnemy();
+		assertTrue(collision.isEnemyHit());
+		
 	}
 
 }

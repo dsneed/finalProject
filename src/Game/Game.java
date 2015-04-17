@@ -16,4 +16,14 @@ public class Game {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public int getNumRows() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getNumColumns() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
