@@ -43,11 +43,14 @@ public class Sprite {
 			currentFrame = totalFrames % currentFrame;
 			timeSinceLastFrame = 0;
 		}
-		
 		timeSinceLastFrame += elapsedTime;
 	}
 	private void UpdatePosition(long elapsedTime) {
-		
+		Vec2d newPosition = new Vec2d();
+		newPosition.x = position.x + speed*velocity.x*elapsedTime;
+		newPosition.y = position.y + speed*velocity.y*elapsedTime;
+		// Check for if touching edge of screen (movementBounds)
+		position = newPosition;
 	}
 	
 	private long getSecondsInFrame() {
