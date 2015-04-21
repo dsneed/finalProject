@@ -1,9 +1,34 @@
 package Game;
 
-public class Sprite {
+import com.sun.javafx.geom.Rectangle;
+import com.sun.javafx.geom.Vec2d;
+import com.sun.prism.Texture;
 
-	public Sprite(){
+public class Sprite {
+	private Texture texture;
+	private Vec2d position;
+	private int speed;
+	private Vec2d velocity;
+	private int rows;
+	private int columns;
+	private int framesPerSecond;
+	private Rectangle boundingBox;
+	private int currentFrame;
+	private int totalFrames;
 		
+	public Sprite(){
+		totalFrames = rows*columns;
+	}
+	
+	public void Update(long elapsedTime) {
+
+	}
+	public void Draw(long elapsedTime) {
+		int imageWidth = texture.getContentWidth() / columns;
+		int imageHeight = texture.getContentHeight() / rows;
+		
+		int currentRow = totalFrames / currentFrame;
+		int currentColumn = totalFrames / currentFrame;
 	}
 
 	
@@ -12,7 +37,7 @@ public class Sprite {
 		return 0;
 	}
 	
-	public boolean isWall(int row, int column){
+	public boolean isWall(){
 		
 		return false;
 	}
