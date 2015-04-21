@@ -1,6 +1,8 @@
 package Game;
 
 public class Game {
+	private int numRows;
+	private int numCols;
 
 	public Game(String inputFile){
 		
@@ -18,12 +20,10 @@ public class Game {
 	}
 
 	public int getNumRows() {
-		// TODO Auto-generated method stub
-		return 0;
+		return numRows;
 	}
 
 	public int getNumColumns() {
-		// TODO Auto-generated method stub
-		return 0;
+		return numCols;
 	}
 }
