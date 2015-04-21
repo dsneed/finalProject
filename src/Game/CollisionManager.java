@@ -13,7 +13,7 @@ public class CollisionManager {
 		return false;
 	}
 
-	public CollisionManager( ){
+	public CollisionManager(){
 		
 	}
 	
