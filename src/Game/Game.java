@@ -3,9 +3,10 @@ package Game;
 public class Game {
 	private int numRows;
 	private int numCols;
+	private String mapFileName;
 
 	public Game(String inputFile){
-		
+		mapFileName = inputFile;
 		loadConfigFiles();
 		LoadComponents();
 	}
