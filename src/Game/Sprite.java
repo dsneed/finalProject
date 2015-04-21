@@ -19,10 +19,6 @@ public class Sprite {
 	public Sprite(){
 		totalFrames = rows*columns;
 	}
-	
-	public void Update(long elapsedTime) {
-
-	}
 	public void Draw(long elapsedTime) {
 		int imageWidth = texture.getContentWidth() / columns;
 		int imageHeight = texture.getContentHeight() / rows;
