@@ -15,16 +15,43 @@ public class Sprite {
 	private Rectangle boundingBox;
 	private int currentFrame;
 	private int totalFrames;
+	private long timeSinceLastFrame;
 		
 	public Sprite(){
 		totalFrames = rows*columns;
+		currentFrame = 1;
+		timeSinceLastFrame = 0;
+	}
+	
+	public void Update(long elapsedTime) {
+		UpdateAnimation(elapsedTime);
+		UpdatePosition(elapsedTime);
 	}
 	public void Draw(long elapsedTime) {
+
+	}
+	
+	private void UpdateAnimation(long elapsedTime) {
 		int imageWidth = texture.getContentWidth() / columns;
 		int imageHeight = texture.getContentHeight() / rows;
 		
 		int currentRow = totalFrames / currentFrame;
-		int currentColumn = totalFrames / currentFrame;
+		int currentColumn = totalFrames % currentFrame;
+		
+		if(timeSinceLastFrame >= getSecondsInFrame()) {
+			currentFrame++;
+			currentFrame = totalFrames % currentFrame;
+			timeSinceLastFrame = 0;
+		}
+		
+		timeSinceLastFrame += elapsedTime;
+	}
+	private void UpdatePosition(long elapsedTime) {
+		
+	}
+	
+	private long getSecondsInFrame() {
+		return (long)1/framesPerSecond;
 	}
 
 	
