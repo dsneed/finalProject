@@ -25,6 +25,7 @@ public class Sprite {
 		this.rows = rows;
 		this.columns = columns;
 		this.framesPerSecond = FPS;
+		boundingBox = CreateBoundingBox(position);
 		totalFrames = rows*columns;
 		currentFrame = 1;
 		timeSinceLastFrame = 0;
@@ -34,17 +35,23 @@ public class Sprite {
 		UpdateAnimation(elapsedTime);
 		UpdatePosition(elapsedTime);
 	}
-	public void Draw(long elapsedTime) {
-
-	}
 	
-	private void UpdateAnimation(long elapsedTime) {
-		int imageWidth = texture.getContentWidth() / columns;
-		int imageHeight = texture.getContentHeight() / rows;
+	//TODO: find a way to get a spritebatch or something to draw rectangles with.
+	public void Draw(long elapsedTime) {
+		int imageWidth = getWidth();
+		int imageHeight = getHeight();
 		
 		int currentRow = totalFrames / currentFrame;
 		int currentColumn = totalFrames % currentFrame;
 		
+		Rectangle sourceRectangle = new Rectangle(imageWidth*currentColumn, imageHeight*currentRow, imageWidth,
+                imageHeight);
+		Rectangle destinationRectangle = new Rectangle((int) position.x, (int) position.y, imageWidth, imageHeight);
+		
+		//spriteBatch.Draw(texture, destinationRectangle, sourceRectangle);
+	}
+	
+	private void UpdateAnimation(long elapsedTime) {
 		if(timeSinceLastFrame >= getSecondsInFrame()) {
 			currentFrame++;
 			currentFrame = totalFrames % currentFrame;
@@ -58,16 +65,29 @@ public class Sprite {
 		newPosition.y = position.y + speed*velocity.y*elapsedTime;
 		// Check for if touching edge of screen (movementBounds)
 		position = newPosition;
+		boundingBox = CreateBoundingBox(position);
 	}
 	
 	private long getSecondsInFrame() {
 		return (long)1/framesPerSecond;
 	}
 
+	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is
+	private Rectangle CreateBoundingBox(Vec2d newPosition) {
+		Rectangle boundingBox = new Rectangle(getWidth(), getHeight(), getWidth() + (int)newPosition.x,
+				getHeight() + (int)newPosition.y);
+		return boundingBox;
+	}
 	
-	public int getNumWalls(){
-		
+	public int getNumWalls(){	
 		return 0;
+	}
+	
+	public int getWidth() {
+		return texture.getContentWidth() / columns;
+	}
+	public int getHeight() {
+		return texture.getContentHeight() / rows;
 	}
 	
 	public boolean isWall(){
