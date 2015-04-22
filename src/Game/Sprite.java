@@ -17,7 +17,14 @@ public class Sprite {
 	private int totalFrames;
 	private long timeSinceLastFrame;
 		
-	public Sprite(){
+	public Sprite(Texture texture, Vec2d initPosition, Vec2d velocity, int speed, int rows, int columns, int FPS) {
+		this.texture = texture;
+		this.position = initPosition;
+		this.velocity = velocity;
+		this.speed = speed;
+		this.rows = rows;
+		this.columns = columns;
+		this.framesPerSecond = FPS;
 		totalFrames = rows*columns;
 		currentFrame = 1;
 		timeSinceLastFrame = 0;
