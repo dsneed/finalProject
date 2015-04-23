@@ -21,24 +21,22 @@ public class MapLoadTests {
 	private static ProjectileManager projectileManager;
 	private static Projectile projectile;
 	
-	public static final int NUM_ROWS = 19;
-	public static final int NUM_COLUMNS = 33;
+	public static final int NUM_ROWS = 20;
+	public static final int NUM_COLUMNS = 34;
 	
 	@BeforeClass
 	public static void setUp() {
 		game = new Game("TestLevel.csv");
-		sprite = new Sprite();
-		
 	}
 
 	@Test
 	public void testLevelDimensions() {
 		
 		//TODO: Test to see the board is expected size
-		assertEquals(NUM_ROWS, game.getNumRows());
 		assertEquals(NUM_COLUMNS, game.getNumColumns());
+		assertEquals(NUM_ROWS, game.getNumRows());
 		int totalCells = game.getNumRows() * game.getNumColumns();
-		assertEquals(627, totalCells);
+		assertEquals(680, totalCells);
 	}
 	
 	@Test
@@ -47,16 +45,16 @@ public class MapLoadTests {
 		assertTrue(game.isWallAt(0,0));
 		assertTrue(game.isWallAt(1,0));
 		assertTrue(game.isWallAt(0,1));
-		assertTrue(game.isWallAt(4,25));
+		assertTrue(game.isWallAt(4,26));
 		
 		//TODO: Test the locations of the non-walls
 		assertFalse(game.isWallAt(2,2));
 		assertFalse(game.isWallAt(10,10));
 		assertFalse(game.isWallAt(15,12));
-		assertFalse(game.isWallAt(4,26));
+		assertFalse(game.isWallAt(4,27));
 		
 		//TODO: Test number of total walls
-		assertEquals(sprite.getNumWalls(), 125); // This was the number of walls I counted
+		assertEquals(game.getNumWalls(), 129); // This was the number of walls I counted
 	}
 	
 	@Test
