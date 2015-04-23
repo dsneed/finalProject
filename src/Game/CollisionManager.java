@@ -4,15 +4,13 @@ import java.util.ArrayList;
 
 public class CollisionManager {
 	private ArrayList<Wall> walls;
-	private ArrayList<Target> targets;
 	private ArrayList<Enemy> enemies;
 	private ProjectileManager projectileManager;
 	private Player player;
 	
-	public CollisionManager(ArrayList<Wall> walls, ArrayList<Target> targets, 
-			ArrayList<Enemy> enemies, Player player, ProjectileManager projectileManager){
+	public CollisionManager(ArrayList<Wall> walls, ArrayList<Enemy> enemies, 
+			Player player, ProjectileManager projectileManager){
 		this.walls = walls;
-		this.targets = targets;
 		this.enemies = enemies;
 		this.player = player;
 		this.projectileManager = projectileManager;
@@ -65,18 +63,4 @@ public class CollisionManager {
 		}
 		return false;
 	}
-	
-	//Checks Projectile intersection with Targets;
-	public boolean checkProjectileToTarget() {
-		for(Target t: targets) {
-			for(Projectile p : projectileManager.getProjectiles()) {
-				if(p.intersects(t)) {
-					p.setIsBlocked(true);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
 }
