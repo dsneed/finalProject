@@ -3,10 +3,6 @@ package Game;
 import java.util.ArrayList;
 
 public class CollisionManager {
-	private boolean enemyHit = false; 
-	private boolean wallHit = false;
-	private boolean projectileToWall = false;
-	private boolean projectileToEnemy = false;
 	private ArrayList<Wall> walls;
 	private ArrayList<Target> targets;
 	private ArrayList<Enemy> enemies;
@@ -27,10 +23,10 @@ public class CollisionManager {
 		for(Wall w: walls) {
 			if(player.intersects(w)) {
 				player.setIsBlocked(true);
-				wallHit = true;
+				return true;
 			}
 		}
-		return wallHit;
+		return false;
 	}
 	
 	//Checks Player intersection with Enemies
@@ -38,10 +34,10 @@ public class CollisionManager {
 		for(Enemy e: enemies) {
 			if(player.intersects(e)) {
 				player.setIsBlocked(true);
-				enemyHit = true;
+				return true;
 			}
 		}
-		return enemyHit;
+		return false;
 	}
 
 	//Checks Projectile intersection with Walls
@@ -49,12 +45,12 @@ public class CollisionManager {
 		for(Wall w: walls) {
 			for(Projectile p : projectileManager.getProjectiles()) {
 				if(p.intersects(w)) {
-					projectileToWall = true;
 					p.setIsBlocked(true);
+					return true;
 				}
 			}
 		}
-		return projectileToWall;
+		return false;
 	}
 	
 	//Checks Projectile intersection with Enemies
@@ -62,11 +58,25 @@ public class CollisionManager {
 		for(Enemy e: enemies) {
 			for(Projectile p : projectileManager.getProjectiles()) {
 				if(p.intersects(e)) {
-					projectileToEnemy = true;
 					p.setIsBlocked(true);
+					return true;
 				}
 			}
 		}
-		return projectileToEnemy;
+		return false;
 	}
+	
+	//Checks Projectile intersection with Targets;
+	public boolean checkProjectileToTarget() {
+		for(Target t: targets) {
+			for(Projectile p : projectileManager.getProjectiles()) {
+				if(p.intersects(t)) {
+					p.setIsBlocked(true);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 }
