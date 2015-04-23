@@ -83,11 +83,26 @@ public class Sprite {
 		return 0;
 	}
 	
+	public boolean intersects(Sprite s) {
+		//One rectangle is on left of the other
+		if(this.boundingBox.x > (s.getBoundingBox().x+s.getBoundingBox().width) || 
+				s.getBoundingBox().x > (this.boundingBox.x + this.boundingBox.width))
+			return false;
+		//One rectangle is on top of the other
+		if(this.boundingBox.y < (s.getBoundingBox().y+s.getBoundingBox().height) || 
+				s.getBoundingBox().y < (this.boundingBox.y + this.boundingBox.height))
+			return false;
+		return true;
+	}
+	
 	public int getWidth() {
 		return texture.getContentWidth() / columns;
 	}
 	public int getHeight() {
 		return texture.getContentHeight() / rows;
+	}
+	public Rectangle getBoundingBox() {
+		return boundingBox;
 	}
 	
 	public boolean isWall(){

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class CollisionManager {
 	private boolean enemyHit = false; 
 	private boolean wallHit = false;
+	private boolean projectileToWall = false;
+	private boolean projectileToEnemy = false;
 	private ArrayList<Wall> walls;
 	private ArrayList<Target> targets;
 	private ArrayList<Enemy> enemies;
@@ -18,25 +20,40 @@ public class CollisionManager {
 		this.player = player;
 	}
 	
+	//Checks Player intersection with Walls
 	public boolean isWallHit() {
 		for(Wall w: walls) {
-			
+			if(player.intersects(w))
+					wallHit = true;
 		}
 		return wallHit;
 	}
 	
+	//Checks Player intersection with Enemies
 	public boolean isEnemyHit() {
+		for(Enemy e: enemies) {
+			if(player.intersects(e))
+				enemyHit = true;
+		}
 		return enemyHit;
 	}
 
-	public void checkPlayerToEnemy() {
-		// TODO Auto-generated method stub
-		
+	//Checks Projectile intersection with Walls
+	public boolean checkProjectileToWall(Projectile p) {
+		for(Wall w: walls) {
+			if(player.intersects(w))
+					projectileToWall = true;
+		}
+		return projectileToWall;
 	}
-
-	public void checkProjectileToWall(Projectile p) {
-		// TODO Auto-generated method stub
-		
+	
+	//Checks Projectile intersection with Enemies
+	public boolean checkProjectileToEnemy(Projectile p) {
+		for(Enemy e: enemies) {
+			if(player.intersects(e))
+				projectileToEnemy = true;
+		}
+		return projectileToEnemy;
 	}
 
 }
