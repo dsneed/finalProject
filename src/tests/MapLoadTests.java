@@ -1,12 +1,9 @@
 package tests;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
 import Game.CollisionManager;
 import Game.Game;
 import Game.Projectile;
@@ -17,7 +14,7 @@ import Game.Sprite;
 public class MapLoadTests {
 	private static Sprite sprite;
 	private static Game game;
-	private static CollisionManager collision = new CollisionManager(null, null, null, null);
+	private static CollisionManager collision = new CollisionManager(null, null, null, null, null);
 	private static ProjectileManager projectileManager;
 	private static Projectile projectile;
 	

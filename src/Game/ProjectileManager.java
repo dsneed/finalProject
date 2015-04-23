@@ -28,12 +28,20 @@ public class ProjectileManager {
 		this.FPS = FPS;
 	}
 	
-	public void Update(long elapsedTime) {
-		
+	public void Update(long elapsedTime, Vec2d newPosition) {
+		position = newPosition;
+		for(Projectile p : projectiles) {
+			p.Update(elapsedTime);
+			if(p.isBlocked()) {
+				DeleteProjectile(p);
+			}
+		}
 	}
 	
 	public void Draw() {
-		
+		for(Projectile p : projectiles) {
+			p.Draw();
+		}
 	}
 	
 	public void CreateProjectile() {
@@ -41,8 +49,8 @@ public class ProjectileManager {
 		projectiles.add(p);
 	}
 	
-	public void DeleteProjectile(int index) {
-		projectiles.remove(index);
+	public void DeleteProjectile(Projectile p) {
+		projectiles.remove(p);
 	}
 	
 	
@@ -53,6 +61,10 @@ public class ProjectileManager {
 	
 	public ArrayList<Projectile> getProjectilePath(){
 		return projectilePath;
+	}
+	
+	public ArrayList<Projectile> getProjectiles(){
+		return projectiles;
 	}
 	
 	

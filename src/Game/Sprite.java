@@ -16,6 +16,7 @@ public class Sprite {
 	private int currentFrame;
 	private int totalFrames;
 	private long timeSinceLastFrame;
+	private boolean isBlocked;
 		
 	public Sprite(Texture texture, Vec2d initPosition, Vec2d velocity, int speed, int rows, int columns, int FPS) {
 		this.texture = texture;
@@ -29,6 +30,7 @@ public class Sprite {
 		totalFrames = rows*columns;
 		currentFrame = 1;
 		timeSinceLastFrame = 0;
+		isBlocked = false;
 	}
 	
 	public void Update(long elapsedTime) {
@@ -36,8 +38,8 @@ public class Sprite {
 		UpdatePosition(elapsedTime);
 	}
 	
-	//TODO: find a way to get a spritebatch or something to draw rectangles with.
-	public void Draw(long elapsedTime) {
+	//TODO: find a way to get a spriteBatch or something to draw rectangles with.
+	public void Draw() {
 		int imageWidth = getWidth();
 		int imageHeight = getHeight();
 		
@@ -103,6 +105,13 @@ public class Sprite {
 	}
 	public Rectangle getBoundingBox() {
 		return boundingBox;
+	}
+	
+	public void setIsBlocked(boolean newVal) {
+		isBlocked = newVal;
+	}
+	public boolean isBlocked() {
+		return isBlocked;
 	}
 	
 	public boolean isWall(){
