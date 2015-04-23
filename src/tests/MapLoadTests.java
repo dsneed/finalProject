@@ -17,7 +17,7 @@ import Game.Sprite;
 public class MapLoadTests {
 	private static Sprite sprite;
 	private static Game game;
-	private static CollisionManager collision = new CollisionManager();
+	private static CollisionManager collision = new CollisionManager(null, null, null, null);
 	private static ProjectileManager projectileManager;
 	private static Projectile projectile;
 	

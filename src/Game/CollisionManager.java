@@ -10,11 +10,18 @@ public class CollisionManager {
 	private ArrayList<Enemy> enemies;
 	private Player player;
 	
-	public CollisionManager(){
-		
+	public CollisionManager(ArrayList<Wall> walls, ArrayList<Target> targets, 
+			ArrayList<Enemy> enemies, Player player){
+		this.walls = walls;
+		this.targets = targets;
+		this.enemies = enemies;
+		this.player = player;
 	}
 	
 	public boolean isWallHit() {
+		for(Wall w: walls) {
+			
+		}
 		return wallHit;
 	}
 	
