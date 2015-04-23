@@ -1,13 +1,14 @@
 package Game;
 
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import com.sun.javafx.geom.Vec2d;
-import com.sun.prism.Texture;
 
 public class ProjectileManager {
-	private Texture texture;
+	private BufferedImage texture;
 	private Vec2d position;
 	private Vec2d velocity;
 	private int speed;
@@ -17,7 +18,7 @@ public class ProjectileManager {
 	private ArrayList<Projectile> projectilePath = new ArrayList<Projectile>(); // ArrayList to hold all the positions of the projectile
 	private ArrayList<Projectile> projectiles;
 	
-	public ProjectileManager(Texture texture, Vec2d initPosition, Vec2d velocity,
+	public ProjectileManager(BufferedImage texture, Vec2d initPosition, Vec2d velocity,
 			int speed, int rows, int columns, int FPS){
 		this.texture = texture;
 		this.position = initPosition;
@@ -37,10 +38,10 @@ public class ProjectileManager {
 			}
 		}
 	}
-	
-	public void Draw() {
+
+	public void Draw(Graphics g) {
 		for(Projectile p : projectiles) {
-			p.Draw();
+			p.Draw(g);
 		}
 	}
 	

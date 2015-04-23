@@ -1,11 +1,14 @@
 package Game;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
 import com.sun.javafx.geom.Rectangle;
 import com.sun.javafx.geom.Vec2d;
-import com.sun.prism.Texture;
 
 public class Sprite {
-	private Texture texture;
+	private BufferedImage texture;
 	private Vec2d position;
 	private int speed;
 	private Vec2d velocity;
@@ -18,7 +21,7 @@ public class Sprite {
 	private long timeSinceLastFrame;
 	private boolean isBlocked;
 		
-	public Sprite(Texture texture, Vec2d initPosition, Vec2d velocity, int speed, int rows, int columns, int FPS) {
+	public Sprite(BufferedImage texture, Vec2d initPosition, Vec2d velocity, int speed, int rows, int columns, int FPS) {
 		this.texture = texture;
 		this.position = initPosition;
 		this.velocity = velocity;
@@ -39,16 +42,17 @@ public class Sprite {
 	}
 	
 	//TODO: find a way to get a spriteBatch or something to draw rectangles with.
-	public void Draw() {
+	public void Draw(Graphics g) {
 		int imageWidth = getWidth();
 		int imageHeight = getHeight();
 		
 		int currentRow = totalFrames / currentFrame;
 		int currentColumn = totalFrames % currentFrame;
 		
-		Rectangle sourceRectangle = new Rectangle(imageWidth*currentColumn, imageHeight*currentRow, imageWidth,
+		Image sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth,
                 imageHeight);
-		Rectangle destinationRectangle = new Rectangle((int) position.x, (int) position.y, imageWidth, imageHeight);
+		//Rectangle destinationRectangle = new Rectangle((int) position.x, (int) position.y, imageWidth, imageHeight);
+		g.drawImage(sourceRectangle, (int)position.x, (int)position.y, null);
 		
 		//spriteBatch.Draw(texture, destinationRectangle, sourceRectangle);
 	}
@@ -98,10 +102,10 @@ public class Sprite {
 	}
 	
 	public int getWidth() {
-		return texture.getContentWidth() / columns;
+		return texture.getWidth() / columns;
 	}
 	public int getHeight() {
-		return texture.getContentHeight() / rows;
+		return texture.getHeight() / rows;
 	}
 	public Rectangle getBoundingBox() {
 		return boundingBox;
