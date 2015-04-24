@@ -18,7 +18,7 @@ public class Sprite {
 	private Rectangle boundingBox;
 	private int currentFrame;
 	private int totalFrames;
-	private long timeSinceLastFrame;
+	private float timeSinceLastFrame;
 	private boolean isBlocked;
 		
 	public Sprite(BufferedImage texture, Vec2d initPosition, Vec2d velocity, int speed, int rows, int columns, int FPS) {
@@ -36,36 +36,33 @@ public class Sprite {
 		isBlocked = false;
 	}
 	
-	public void Update(long elapsedTime) {
+	public void Update(float elapsedTime) {
 		UpdateAnimation(elapsedTime);
 		UpdatePosition(elapsedTime);
 	}
 	
-	//TODO: find a way to get a spriteBatch or something to draw rectangles with.
 	public void Draw(Graphics g) {
 		int imageWidth = getWidth();
 		int imageHeight = getHeight();
 		
-		int currentRow = totalFrames / currentFrame;
-		int currentColumn = totalFrames % currentFrame;
+		int currentRow = currentFrame / columns;
+		int currentColumn = currentFrame % columns;
 		
-		Image sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth,
-                imageHeight);
+		Image sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth, imageHeight);
 		//Rectangle destinationRectangle = new Rectangle((int) position.x, (int) position.y, imageWidth, imageHeight);
 		g.drawImage(sourceRectangle, (int)position.x, (int)position.y, null);
-		
 		//spriteBatch.Draw(texture, destinationRectangle, sourceRectangle);
 	}
 	
-	private void UpdateAnimation(long elapsedTime) {
+	private void UpdateAnimation(float elapsedTime) {
 		if(timeSinceLastFrame >= getSecondsInFrame()) {
 			currentFrame++;
-			currentFrame = totalFrames % currentFrame;
+			currentFrame = currentFrame % totalFrames;
 			timeSinceLastFrame = 0;
 		}
 		timeSinceLastFrame += elapsedTime;
 	}
-	private void UpdatePosition(long elapsedTime) {
+	private void UpdatePosition(float elapsedTime) {
 		Vec2d newPosition = new Vec2d();
 		newPosition.x = position.x + speed*velocity.x*elapsedTime;
 		newPosition.y = position.y + speed*velocity.y*elapsedTime;
@@ -74,8 +71,8 @@ public class Sprite {
 		boundingBox = CreateBoundingBox(position);
 	}
 	
-	private long getSecondsInFrame() {
-		return (long)1/framesPerSecond;
+	private float getSecondsInFrame() {
+		return (float)1/(float)framesPerSecond;
 	}
 
 	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is
