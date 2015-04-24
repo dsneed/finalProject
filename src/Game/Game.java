@@ -138,6 +138,7 @@ public class Game extends JPanel {
 		JFrame frame = new JFrame();
 		Game game = new Game("TestLevel.csv", "assets/runningcat.png");
 		frame.add(game);
+		frame.setSize(800, 500);
 		frame.setVisible(true);
 		
 		while(true) {
