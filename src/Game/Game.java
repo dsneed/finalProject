@@ -23,6 +23,7 @@ public class Game extends JPanel {
 	private String playerFileName;
 	private String[][] layout = new String[MAX_CELLS][MAX_CELLS];
 	public Sprite cat;
+
 	public Game(String mapFile, String playerFile){
 		this.mapFileName = mapFile;
 		this.playerFileName = playerFile;
@@ -48,12 +49,13 @@ public class Game extends JPanel {
 	public void loadCat() {
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(new File("runningcat.png"));
-		} catch(IOException e) {
 
+			img = ImageIO.read(new File(playerFileName));
+		} catch(IOException e) {
+			System.out.println("What?!");
 		}
 		
-		cat = new Sprite(img, new Vec2d(50, 50), new Vec2d(0,0), 5, 4, 2, 10);
+		cat = new Sprite(img, new Vec2d(50, 50), new Vec2d(0,0), 5, 4, 2, 15);
 	}
 
 	public void fillLayout(String fileName) throws BadConfigFormatException {
@@ -135,13 +137,14 @@ public class Game extends JPanel {
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "runningcat.png");
+
+		Game game = new Game("TestLevel.csv", "assets/runningcat.png");
 		frame.add(game);
+		frame.setSize(800, 500);
 		frame.setVisible(true);
 		
 		while(true) {
-			
-			game.cat.Update((long).0001);
+			game.cat.Update((float).0000001);
 			game.repaint();
 		}
 	}
