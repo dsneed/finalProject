@@ -23,7 +23,7 @@ public class MapLoadTests {
 	
 	@BeforeClass
 	public static void setUp() {
-		game = new Game("TestLevel.csv");
+		//game = new Game("TestLevel.csv");
 	}
 
 	@Test

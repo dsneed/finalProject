@@ -21,7 +21,8 @@ public class Sprite {
 	private long timeSinceLastFrame;
 	private boolean isBlocked;
 		
-	public Sprite(BufferedImage texture, Vec2d initPosition, Vec2d velocity, int speed, int rows, int columns, int FPS) {
+	public Sprite(BufferedImage texture, Vec2d initPosition, Vec2d velocity,
+			int speed, int rows, int columns, int FPS) {
 		this.texture = texture;
 		this.position = initPosition;
 		this.velocity = velocity;

@@ -1,19 +1,31 @@
 package Game;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Game {
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import com.sun.javafx.geom.Vec2d;
+
+public class Game extends JPanel {
 	public static int MAX_CELLS = 100;
 	private int numRows;
 	private int numCols;
 	private int numWalls;
 	private String mapFileName;
+	private String playerFileName;
 	private String[][] layout = new String[MAX_CELLS][MAX_CELLS];
-	public Game(String inputFile){
-		mapFileName = inputFile;
+	public Sprite cat;
+	public Game(String mapFile, String playerFile){
+		this.mapFileName = mapFile;
+		this.playerFileName = playerFile;
 		loadConfigFiles();
 		LoadComponents();
 	}
@@ -24,6 +36,7 @@ public class Game {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		loadCat();
 	}
 
 	private void LoadComponents() {
@@ -31,6 +44,18 @@ public class Game {
 		
 	}
 	
+	//For testing Sprite
+	public void loadCat() {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("runningcat.png"));
+		} catch(IOException e) {
+
+		}
+		
+		cat = new Sprite(img, new Vec2d(50, 50), new Vec2d(0,0), 5, 4, 2, 10);
+	}
+
 	public void fillLayout(String fileName) throws BadConfigFormatException {
 		FileReader fileIn = null;
 		try {
@@ -100,5 +125,24 @@ public class Game {
 	
 	public int getNumWalls() {
 		return numWalls;
+	}
+	
+	public void paintComponent(Graphics g) {
+		  super.paintComponent(g);
+		  
+		  cat.Draw(g);
+	}
+	
+	public static void main(String args[]) {
+		JFrame frame = new JFrame();
+		Game game = new Game("TestLevel.csv", "runningcat.png");
+		frame.add(game);
+		frame.setVisible(true);
+		
+		while(true) {
+			
+			game.cat.Update((long).0001);
+			game.repaint();
+		}
 	}
 }
