@@ -21,10 +21,10 @@ public class Sprite {
 	private float timeSinceLastFrame;
 	private boolean isBlocked;
 		
-	public Sprite(BufferedImage texture, Vec2d initPosition, Vec2d velocity, int speed, int rows, int columns, int FPS) {
+	public Sprite(BufferedImage texture, Vec2d initPosition, int speed, int rows, int columns, int FPS) {
 		this.texture = texture;
 		this.position = initPosition;
-		this.velocity = velocity;
+		this.velocity = new Vec2d(0, 0);
 		this.speed = speed;
 		this.rows = rows;
 		this.columns = columns;

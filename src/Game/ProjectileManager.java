@@ -46,7 +46,7 @@ public class ProjectileManager {
 	}
 	
 	public void CreateProjectile() {
-		Projectile p = new Projectile(texture, position, velocity, speed, rows, columns, FPS);
+		Projectile p = new Projectile(texture, position, speed, rows, columns, FPS);
 		projectiles.add(p);
 	}
 	

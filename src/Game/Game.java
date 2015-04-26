@@ -16,17 +16,21 @@ import com.sun.javafx.geom.Vec2d;
 
 public class Game extends JPanel {
 	public static int MAX_CELLS = 100;
+	public static int CELL_LENGTH = 10;
 	private int numRows;
 	private int numCols;
 	private int numWalls;
 	private String mapFileName;
 	private String playerFileName;
+	private String enemyFileName;
 	private String[][] layout = new String[MAX_CELLS][MAX_CELLS];
 	public Sprite cat;
+	public EnemyManager enemyManager;
 	
-	public Game(String mapFile, String playerFile){
+	public Game(String mapFile, String playerFile, String enemyFile){
 		this.mapFileName = mapFile;
 		this.playerFileName = playerFile;
+		this.enemyFileName = enemyFile;
 		loadConfigFiles();
 		LoadComponents();
 	}
@@ -37,14 +41,24 @@ public class Game extends JPanel {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		loadCat();
 	}
 
 	private void LoadComponents() {
-		// TODO Auto-generated method stub
-		
+		loadCat();	// Load Player
+		loadEnemyManager();
+		// Load enemies and wall
+		for(int i = 0; i < numRows; i++) {
+			for(int j = 0; j < numCols; j++) {
+				if(layout[i][j].equals("T")) {
+					enemyManager.CreateEnemy(new Vec2d(i*CELL_LENGTH, j*CELL_LENGTH));
+				}
+				else if (layout[i][j].equals("W")) {
+					// TODO: Draw wall
+				}
+			}
+		}
 	}
-	
+
 	//For testing Sprite
 	public void loadCat() {
 		BufferedImage img = null;
@@ -54,7 +68,17 @@ public class Game extends JPanel {
 			System.out.println("What?!");
 		}
 		
-		cat = new Sprite(img, new Vec2d(50, 50), new Vec2d(0,0), 5, 4, 2, 15);
+		cat = new Sprite(img, new Vec2d(50, 50), 100, 4, 2, 15);
+	}
+	
+	public void loadEnemyManager() {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(enemyFileName));
+		} catch(IOException e) {
+			System.out.println("What?!");
+		}
+		enemyManager = new EnemyManager(img, new Vec2d(50, 50), 100, 2, 5, 15);
 	}
 
 	public void fillLayout(String fileName) throws BadConfigFormatException {
@@ -130,20 +154,28 @@ public class Game extends JPanel {
 	
 	public void paintComponent(Graphics g) {
 		  super.paintComponent(g);
-		  
 		  cat.Draw(g);
+		  enemyManager.Draw(g);
 	}
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "assets/runningcat.png");
+		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png");
 		frame.add(game);
 		frame.setSize(800, 500);
 		frame.setVisible(true);
-		
+		float timeElapsed = 0;
 		while(true) {
+			
 			game.cat.Update((float).0000001);
-			game.repaint();
+			game.enemyManager.Update((float).0000001);
+			if(timeElapsed >= 1.0f/15.0f) {
+				System.out.println(timeElapsed);
+				game.repaint();
+				timeElapsed = 0;
+			}
+			
+			timeElapsed += .0000001;
 		}
 	}
 }
