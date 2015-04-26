@@ -2,13 +2,15 @@ package Game;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import com.sun.javafx.geom.Rectangle;
 import com.sun.javafx.geom.Vec2d;
 
 public class Sprite {
-	private BufferedImage texture;
+	protected BufferedImage texture;
 	protected Vec2d position;
 	private int speed;
 	protected Vec2d velocity;
@@ -52,6 +54,17 @@ public class Sprite {
 		//Rectangle destinationRectangle = new Rectangle((int) position.x, (int) position.y, imageWidth, imageHeight);
 		g.drawImage(sourceRectangle, (int)position.x, (int)position.y, null);
 		//spriteBatch.Draw(texture, destinationRectangle, sourceRectangle);
+	}
+	public void Draw(Graphics g, AffineTransform tx) {
+		int imageWidth = getWidth();
+		int imageHeight = getHeight();
+		
+		int currentRow = currentFrame / columns;
+		int currentColumn = currentFrame % columns;
+		
+		BufferedImage sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth, imageHeight);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		g.drawImage(op.filter(sourceRectangle, null), (int)position.x, (int)position.y, null);
 	}
 	
 	private void UpdateAnimation(float elapsedTime) {

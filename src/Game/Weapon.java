@@ -1,6 +1,7 @@
 package Game;
 
 import java.awt.Graphics;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import com.sun.javafx.geom.Vec2d;
@@ -34,7 +35,11 @@ public class Weapon extends Sprite {
 	
 	public void Draw(Graphics g) {
 		projectileManager.Draw(g);
-		super.Draw(g);
+		double rotation = Math.toRadians(angle);
+		double locationX = texture.getWidth() / 2;
+		double locationY = texture.getHeight() / 2;
+		AffineTransform tx = AffineTransform.getRotateInstance(rotation, locationX, locationY);
+		super.Draw(g, tx);
 	}
 	
 	public void setAngle(int newAngle) {
