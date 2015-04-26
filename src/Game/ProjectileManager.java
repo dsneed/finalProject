@@ -18,7 +18,7 @@ public class ProjectileManager {
 	private ArrayList<Projectile> projectilePath = new ArrayList<Projectile>(); // ArrayList to hold all the positions of the projectile
 	private ArrayList<Projectile> projectiles;
 	
-	public ProjectileManager(BufferedImage texture, Vec2d initPosition, Vec2d velocity,
+	public ProjectileManager(BufferedImage texture, Vec2d initPosition,
 			int speed, int rows, int columns, int FPS){
 		this.texture = texture;
 		this.position = initPosition;
@@ -45,8 +45,8 @@ public class ProjectileManager {
 		}
 	}
 	
-	public void CreateProjectile() {
-		Projectile p = new Projectile(texture, position, speed, rows, columns, FPS);
+	public void CreateProjectile(int angle) {
+		Projectile p = new Projectile(angle, texture, position, speed, rows, columns, FPS);
 		projectiles.add(p);
 	}
 	
@@ -55,7 +55,7 @@ public class ProjectileManager {
 	}
 	
 	
-	public ArrayList<Projectile> ProjectilePath(int angle, int gravity, int velocity,Projectile intialProjectile){
+	public ArrayList<Projectile> ProjectilePath(int angle, int gravity, int velocity, Projectile intialProjectile){
 		projectilePath = new ArrayList<Projectile>();
 		return projectilePath;
 	}

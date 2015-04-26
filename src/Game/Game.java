@@ -31,18 +31,23 @@ public class Game extends JPanel {
 	private String mapFileName;
 	private String playerFileName;
 	private String enemyFileName;
+	private String projectileFileName;
+	private String weaponFileName;
 	private String[][] layout = new String[MAX_CELLS][MAX_CELLS];
-	public Player cat;
-	public EnemyManager enemyManager;
+	private Player cat;
+	private EnemyManager enemyManager;
+	private Weapon slingshot;
 	private ArrayList<String> inputs;
 	private boolean shouldClearInputs;	// boolean so that event listener and game loop don't interfere
 	LinkedList<KeyEvent> eventsQueue;
 	private long previousTime;
 	
-	public Game(String mapFile, String playerFile, String enemyFile){
+	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile){
 		this.mapFileName = mapFile;
 		this.playerFileName = playerFile;
 		this.enemyFileName = enemyFile;
+		this.projectileFileName = projectileFile;
+		this.weaponFileName = weaponFile;
 		this.inputs = new ArrayList<String>();
 		this.previousTime = System.currentTimeMillis();
 		this.addKeyListener(new InputListener(this));
@@ -56,6 +61,7 @@ public class Game extends JPanel {
 		// in millliseconds, but whatever...
 		processInputs();
 		cat.Update(timeElapsed, getInputs());
+		slingshot.Update(timeElapsed);
 		enemyManager.Update(timeElapsed);
 		if((timeElapsed) >= 1.0f/(float)FPS) {
 			repaint();
@@ -75,6 +81,7 @@ public class Game extends JPanel {
 	private void LoadComponents() {
 		loadCat();	// Load Player
 		loadEnemyManager();
+		loadWeapon();
 		// Load enemies and wall
 		for(int i = 0; i < numRows; i++) {
 			for(int j = 0; j < numCols; j++) {
@@ -86,6 +93,27 @@ public class Game extends JPanel {
 				}
 			}
 		}
+	}
+	
+	public void loadWeapon() {
+		// Load shot
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(projectileFileName));
+		} catch(IOException e) {
+			System.out.println("Projectile file not found.");
+		}
+		
+		ProjectileManager projectileManager = new ProjectileManager(img, new Vec2d(50, 50), 150, 5, 5, 15);
+		
+		// Load weapon
+		BufferedImage img2 = null;
+		try {
+			img2 = ImageIO.read(new File(weaponFileName));
+		} catch(IOException e) {
+			System.out.println("Weapon file not found.");
+		}
+		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(50, 50), 100, 1, 1, 15);		
 	}
 
 	//For testing Sprite
@@ -210,6 +238,7 @@ public class Game extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		  cat.Draw(g);
+		  slingshot.Draw(g);
 		  enemyManager.Draw(g);
 	}
 	
@@ -236,10 +265,9 @@ public class Game extends JPanel {
 		}
 	}
 	
-	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png");
+		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg");
 		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
 		frame.setSize(1000, CELL_LENGTH*game.getNumRows());
