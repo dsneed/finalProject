@@ -1,19 +1,21 @@
 package Game;
 
+import java.awt.EventQueue;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import com.sun.javafx.geom.Vec2d;
 
@@ -30,15 +32,25 @@ public class Game extends JPanel {
 	private String playerFileName;
 	private String enemyFileName;
 	private String[][] layout = new String[MAX_CELLS][MAX_CELLS];
-	public Sprite cat;
+	public Player cat;
 	public EnemyManager enemyManager;
+	private ArrayList<String> inputs;
+	private boolean shouldClearInputs;	// boolean so that event listener and game loop don't interfere
+	LinkedList<KeyEvent> eventsQueue;
 	
 	public Game(String mapFile, String playerFile, String enemyFile){
 		this.mapFileName = mapFile;
 		this.playerFileName = playerFile;
 		this.enemyFileName = enemyFile;
+		this.inputs = new ArrayList<String>();
+		this.addKeyListener(new InputListener(this));
+		eventsQueue = new LinkedList<KeyEvent>();
 		loadConfigFiles();
 		LoadComponents();
+	}
+	
+	public void Update() {
+		// TODO: Transfer stuff from main to here
 	}
 	
 	public void loadConfigFiles() {
@@ -74,7 +86,7 @@ public class Game extends JPanel {
 			System.out.println("What?!");
 		}
 		
-		cat = new Sprite(img, new Vec2d(50, 50), 100, 4, 2, 15);
+		cat = new Player(img, new Vec2d(50, 50), 100, 4, 2, 15);
 	}
 	
 	public void loadEnemyManager() {
@@ -84,7 +96,7 @@ public class Game extends JPanel {
 		} catch(IOException e) {
 			System.out.println("What?!");
 		}
-		enemyManager = new EnemyManager(img, new Vec2d(50, 50), 100, 2, 5, 15);
+		enemyManager = new EnemyManager(img, new Vec2d(50, 50), 50, 2, 5, 15);
 	}
 
 	public void fillLayout(String fileName) throws BadConfigFormatException {
@@ -138,6 +150,10 @@ public class Game extends JPanel {
 			System.out.println("IOException");
 		}
 	}
+	
+	public void addEvent(KeyEvent e) {
+		eventsQueue.add(e);
+	}
 
 	public int getNumRows() {
 		return numRows;
@@ -158,15 +174,67 @@ public class Game extends JPanel {
 		return numWalls;
 	}
 	
+	public ArrayList<String> getInputs() {
+		return inputs;
+	}
+	
+	public boolean shouldClearInputs() {
+		return shouldClearInputs;
+	}
+	public void clearInputs(boolean val) {
+		shouldClearInputs = val;
+	}
+	// Accept event inputs from queue
+	public void processInputs() {
+		if(shouldClearInputs) {
+			inputs.clear();
+			shouldClearInputs = false;
+			return;
+		}
+		if(!eventsQueue.isEmpty()) {
+			inputs.add(Character.toString(eventsQueue.pop().getKeyChar()));
+		}
+	}
+
 	public void paintComponent(Graphics g) {
-		  super.paintComponent(g);
+		super.paintComponent(g);
 		  cat.Draw(g);
 		  enemyManager.Draw(g);
 	}
 	
+	
+	private class InputListener implements KeyListener {
+		private Game game;
+		
+		InputListener(Game game) {
+			super();
+			this.game = game;
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			game.addEvent(e);
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("wtf");
+			game.clearInputs(true);
+		}
+	}
+	
+	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
 		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png");
+		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
 		frame.setSize(1000, CELL_LENGTH*game.getNumRows());
 		frame.setVisible(true);
@@ -176,7 +244,8 @@ public class Game extends JPanel {
 		while(true) {
 			timeElapsed = (currentTime - startTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
 																	// in millliseconds, but whatever...
-			game.cat.Update(timeElapsed);
+			game.processInputs();
+			game.cat.Update(timeElapsed, game.getInputs());
 			game.enemyManager.Update(timeElapsed);
 			if((timeElapsed) >= 1.0f/(float)FPS) {
 				game.repaint();

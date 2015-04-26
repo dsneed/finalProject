@@ -16,19 +16,26 @@ public class Player extends Sprite {
 	public void Update(float elapsedTime, ArrayList<String> inputs) {
 		velocity.x = 0;
 		velocity.y = 0;
-		for(String i : inputs) {
-			if(i.equals("w")) {
-				// TODO: Nothing??
+		if(inputs != null) {
+			for(String i : inputs) {
+				if(i.equals("w")) {
+					// TODO: Nothing??
+				}
+				else if(i.equals("a")) {
+					velocity.x += -1;
+				}
+				else if(i.equals("s")) {
+					// TODO: Nothing??
+				}
+				else if(i.equals("d")) {
+					velocity.x += 1;
+				}
 			}
-			if(i.equals("a")) {
-				velocity.x += -1;
-			}
-			if(i.equals("s")) {
-				// TODO: Nothing??
-			}
-			if(i.equals("d")) {
-				velocity.x += 1;
-			}
+		}
+		double magnitude = Math.sqrt((velocity.x*velocity.x) + (velocity.y*velocity.y));
+		if(magnitude != 0) {
+			velocity.x /= magnitude;
+			velocity.y /= magnitude;	
 		}
 		super.Update(elapsedTime);
 	}
