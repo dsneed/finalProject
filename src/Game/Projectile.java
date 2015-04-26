@@ -11,7 +11,6 @@ public class Projectile extends Sprite {
 		super(texture, initPosition, speed, rows, columns, FPS);
 		
 		this.initAngle = angle;
-		System.out.println(angle);
 		calculateVelocityFromAngle();
 	}
 	private int row = 0;

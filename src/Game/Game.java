@@ -59,6 +59,7 @@ public class Game extends JPanel {
 		this.addKeyListener(new InputListener(this));
 		this.weaponListener = new WeaponListener(this);
 		this.addMouseListener(weaponListener);
+		this.addMouseMotionListener(weaponListener);
 		shotFired = false;
 		keyQueue = new LinkedList<KeyEvent>();
 		mouseQueue = new LinkedList<MouseEvent>();
@@ -68,7 +69,7 @@ public class Game extends JPanel {
 
 	public void Update(long currentTime) {
 		long timeElapsed = (currentTime - previousTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
-		// in millliseconds, but whatever...
+																		// in millliseconds, but whatever...
 		processInputs();
 		cat.Update(timeElapsed, getInputs());
 		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
@@ -205,7 +206,7 @@ public class Game extends JPanel {
 	}
 	
 	public int calculateAngle(int initPos, int newPos) {
-		return (newPos - initPos)/10;
+		return (newPos - initPos)/5;
 	}
 	
 	public void addEvent(KeyEvent e) {
@@ -308,14 +309,16 @@ public class Game extends JPanel {
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
 			initYPos = e.getY();
+			newYPos = e.getY();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 			game.shotFired(true);
-			initYPos = 0;
-			newYPos = 0;
+			System.out.println(initYPos + " " + newYPos);
+			//initYPos = 0;
+			//newYPos = 0;
 		}
 
 		@Override
@@ -337,6 +340,7 @@ public class Game extends JPanel {
 		public void mouseDragged(MouseEvent e) {
 			// TODO Auto-generated method stub
 			newYPos = e.getY();
+			System.out.println(newYPos + "Old pos: " + initYPos);
 		}
 		
 		public int getinitPos() {
