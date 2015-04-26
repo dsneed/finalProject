@@ -206,7 +206,7 @@ public class Game extends JPanel {
 	}
 	
 	public int calculateAngle(int initPos, int newPos) {
-		return -1*(newPos - initPos)/5;
+		return (newPos - initPos)/5;
 	}
 	
 	public void addEvent(KeyEvent e) {
@@ -316,7 +316,6 @@ public class Game extends JPanel {
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 			game.shotFired(true);
-			System.out.println(initYPos + " " + newYPos);
 			//initYPos = 0;
 			//newYPos = 0;
 		}
@@ -340,7 +339,6 @@ public class Game extends JPanel {
 		public void mouseDragged(MouseEvent e) {
 			// TODO Auto-generated method stub
 			newYPos = e.getY();
-			System.out.println(newYPos + "Old pos: " + initYPos);
 		}
 		
 		public int getinitPos() {
