@@ -1,6 +1,8 @@
 package Game;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,12 +13,16 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import com.sun.javafx.geom.Vec2d;
 
 public class Game extends JPanel {
 	public static int MAX_CELLS = 100;
-	public static int CELL_LENGTH = 10;
+	public static int CELL_LENGTH = 20;
+	public static float FPS = 15;
+	
+	//private Timer timer; 
 	private int numRows;
 	private int numCols;
 	private int numWalls;
@@ -159,23 +165,25 @@ public class Game extends JPanel {
 	}
 	
 	public static void main(String args[]) {
-		JFrame frame = new JFrame();
+			JFrame frame = new JFrame();
 		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png");
 		frame.add(game);
-		frame.setSize(800, 500);
+		frame.setSize(1000, 800);
 		frame.setVisible(true);
-		float timeElapsed = 0;
+		long timeElapsed = 0;
+		long startTime = System.currentTimeMillis();
+		long currentTime = System.currentTimeMillis();
 		while(true) {
-			
-			game.cat.Update((float).0000001);
-			game.enemyManager.Update((float).0000001);
-			if(timeElapsed >= 1.0f/15.0f) {
-				System.out.println(timeElapsed);
+			timeElapsed = (currentTime - startTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
+																	// in millliseconds, but whatever...
+			game.cat.Update(timeElapsed);
+			game.enemyManager.Update(timeElapsed);
+			if((timeElapsed) >= 1.0f/FPS) {
 				game.repaint();
 				timeElapsed = 0;
+				startTime = currentTime;
 			}
-			
-			timeElapsed += .0000001;
+			currentTime = System.currentTimeMillis();
 		}
 	}
 }
