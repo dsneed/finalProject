@@ -67,6 +67,7 @@ public class Game extends JPanel {
 		LoadComponents();
 	}
 
+	// Call all objects that need to be updated while keeping track of clock and inputs.
 	public void Update(long currentTime) {
 		long timeElapsed = (currentTime - previousTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
 																		// in millliseconds, but whatever...
@@ -76,6 +77,7 @@ public class Game extends JPanel {
 		slingshot.Update(shotFired, angle, timeElapsed);
 		if(shotFired) {
 			shotFired = false;
+			weaponListener.resetValues();
 		}
 		enemyManager.Update(timeElapsed);
 		if((timeElapsed) >= 1.0f/(float)FPS) {
@@ -265,7 +267,8 @@ public class Game extends JPanel {
 		  enemyManager.Draw(g);
 	}
 	
-	
+	// Listen for movement input, which is then placed in a queue to be processed
+	// in the game loop.
 	private class InputListener implements KeyListener {
 		private Game game;
 		
@@ -288,6 +291,8 @@ public class Game extends JPanel {
 		}
 	}
 	
+	// Listen for aiming weapon and shooting projectile, which can then be grabbed
+	// from this class in the game loop
 	private class WeaponListener implements MouseInputListener {
 		private Game game;
 		private int initYPos;
@@ -301,43 +306,30 @@ public class Game extends JPanel {
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-		}
+		public void mouseClicked(MouseEvent e) {		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
 			initYPos = e.getY();
 			newYPos = e.getY();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
 			game.shotFired(true);
-			//initYPos = 0;
-			//newYPos = 0;
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-		}
+		public void mouseEntered(MouseEvent e) {		}
 
 		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-		}
+		public void mouseExited(MouseEvent e) {		}
 		
 		@Override
-		public void mouseMoved(MouseEvent e) {
-			
-		}
+		public void mouseMoved(MouseEvent e) {		}
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			// TODO Auto-generated method stub
 			newYPos = e.getY();
 		}
 		
@@ -346,6 +338,10 @@ public class Game extends JPanel {
 		}
 		public int getCurrentPos() {
 			return newYPos;
+		}
+		public void resetValues() {
+			initYPos = 0;
+			newYPos = 0;
 		}
 	}
 	
