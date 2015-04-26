@@ -11,6 +11,7 @@ public class Projectile extends Sprite {
 		super(texture, initPosition, speed, rows, columns, FPS);
 		
 		this.initAngle = angle;
+		this.velocity.x = 1;	// TODO: Delete because only for testing
 	}
 	private int row = 0;
 	private int col = 0;

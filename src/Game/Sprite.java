@@ -9,7 +9,7 @@ import com.sun.javafx.geom.Vec2d;
 
 public class Sprite {
 	private BufferedImage texture;
-	private Vec2d position;
+	protected Vec2d position;
 	private int speed;
 	protected Vec2d velocity;
 	private int rows;

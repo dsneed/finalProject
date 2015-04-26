@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +18,7 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputListener;
 
 import com.sun.javafx.geom.Vec2d;
 
@@ -39,8 +42,11 @@ public class Game extends JPanel {
 	private Weapon slingshot;
 	private ArrayList<String> inputs;
 	private boolean shouldClearInputs;	// boolean so that event listener and game loop don't interfere
-	LinkedList<KeyEvent> eventsQueue;
+	LinkedList<KeyEvent> keyQueue;
+	LinkedList<MouseEvent> mouseQueue;
 	private long previousTime;
+	private WeaponListener weaponListener;
+	private boolean shotFired;
 	
 	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile){
 		this.mapFileName = mapFile;
@@ -51,7 +57,11 @@ public class Game extends JPanel {
 		this.inputs = new ArrayList<String>();
 		this.previousTime = System.currentTimeMillis();
 		this.addKeyListener(new InputListener(this));
-		eventsQueue = new LinkedList<KeyEvent>();
+		this.weaponListener = new WeaponListener(this);
+		this.addMouseListener(weaponListener);
+		shotFired = false;
+		keyQueue = new LinkedList<KeyEvent>();
+		mouseQueue = new LinkedList<MouseEvent>();
 		loadConfigFiles();
 		LoadComponents();
 	}
@@ -61,7 +71,11 @@ public class Game extends JPanel {
 		// in millliseconds, but whatever...
 		processInputs();
 		cat.Update(timeElapsed, getInputs());
-		slingshot.Update(timeElapsed);
+		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
+		slingshot.Update(shotFired, angle, timeElapsed);
+		if(shotFired) {
+			shotFired = false;
+		}
 		enemyManager.Update(timeElapsed);
 		if((timeElapsed) >= 1.0f/(float)FPS) {
 			repaint();
@@ -190,8 +204,12 @@ public class Game extends JPanel {
 		}
 	}
 	
+	public int calculateAngle(int initPos, int newPos) {
+		return newPos - initPos;
+	}
+	
 	public void addEvent(KeyEvent e) {
-		eventsQueue.add(e);
+		keyQueue.add(e);
 	}
 
 	public int getNumRows() {
@@ -213,6 +231,10 @@ public class Game extends JPanel {
 		return numWalls;
 	}
 	
+	public void shotFired(boolean val) {
+		shotFired = val;
+	}
+	
 	public ArrayList<String> getInputs() {
 		return inputs;
 	}
@@ -230,8 +252,8 @@ public class Game extends JPanel {
 			shouldClearInputs = false;
 			return;
 		}
-		if(!eventsQueue.isEmpty()) {
-			inputs.add(Character.toString(eventsQueue.pop().getKeyChar()));
+		if(!keyQueue.isEmpty()) {
+			inputs.add(Character.toString(keyQueue.pop().getKeyChar()));
 		}
 	}
 
@@ -262,6 +284,66 @@ public class Game extends JPanel {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			game.clearInputs(true);
+		}
+	}
+	
+	private class WeaponListener implements MouseInputListener {
+		private Game game;
+		private int initYPos;
+		private int newYPos;
+		
+		WeaponListener(Game game) {
+			super();
+			this.game = game;
+			initYPos = 0;
+			newYPos = 0;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			initYPos = e.getY();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			game.shotFired(true);
+			initYPos = 0;
+			newYPos = 0;
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+		
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+			newYPos = e.getY();
+		}
+		
+		public int getinitPos() {
+			return initYPos;
+		}
+		public int getCurrentPos() {
+			return newYPos;
 		}
 	}
 	

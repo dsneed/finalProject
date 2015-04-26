@@ -10,7 +10,6 @@ import com.sun.javafx.geom.Vec2d;
 public class ProjectileManager {
 	private BufferedImage texture;
 	private Vec2d position;
-	private Vec2d velocity;
 	private int speed;
 	private int rows;
 	private int columns;
@@ -22,15 +21,16 @@ public class ProjectileManager {
 			int speed, int rows, int columns, int FPS){
 		this.texture = texture;
 		this.position = initPosition;
-		this.velocity = velocity;
 		this.speed = speed;
 		this.rows = rows;
 		this.columns = columns;
 		this.FPS = FPS;
+		
+		projectiles = new ArrayList<Projectile>();
 	}
 	
-	public void Update(long elapsedTime, Vec2d newPosition) {
-		position = newPosition;
+	public void Update(float elapsedTime, Vec2d newPosition) {
+		position = newPosition; 
 		for(Projectile p : projectiles) {
 			p.Update(elapsedTime);
 			if(p.isBlocked()) {
@@ -40,6 +40,8 @@ public class ProjectileManager {
 	}
 
 	public void Draw(Graphics g) {
+		if(projectiles.isEmpty())
+			return;
 		for(Projectile p : projectiles) {
 			p.Draw(g);
 		}
