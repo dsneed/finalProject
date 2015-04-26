@@ -11,10 +11,23 @@ public class Projectile extends Sprite {
 		super(texture, initPosition, speed, rows, columns, FPS);
 		
 		this.initAngle = angle;
-		this.velocity.x = 1;	// TODO: Delete because only for testing
+		System.out.println(angle);
+		calculateVelocityFromAngle();
 	}
 	private int row = 0;
 	private int col = 0;
+	
+	private void calculateVelocityFromAngle() {
+		velocity.x = Math.cos((double)initAngle);
+		velocity.y = Math.sin((double)initAngle);
+		
+		// Normalize
+		double magnitude = Math.sqrt((velocity.x*velocity.x) + (velocity.y*velocity.y));
+		if(magnitude != 0) {
+			velocity.x /= magnitude;
+			velocity.y /= magnitude;	
+		}
+	}
 	
 	
 
