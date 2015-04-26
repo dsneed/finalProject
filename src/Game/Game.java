@@ -56,7 +56,7 @@ public class Game extends JPanel {
 		for(int i = 0; i < numRows; i++) {
 			for(int j = 0; j < numCols; j++) {
 				if(layout[i][j].equals("T")) {
-					enemyManager.CreateEnemy(new Vec2d(i*CELL_LENGTH, j*CELL_LENGTH));
+					enemyManager.CreateEnemy(new Vec2d(j*CELL_LENGTH, i*CELL_LENGTH));
 				}
 				else if (layout[i][j].equals("W")) {
 					// TODO: Draw wall
@@ -165,10 +165,10 @@ public class Game extends JPanel {
 	}
 	
 	public static void main(String args[]) {
-			JFrame frame = new JFrame();
+		JFrame frame = new JFrame();
 		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png");
 		frame.add(game);
-		frame.setSize(1000, 800);
+		frame.setSize(1000, CELL_LENGTH*game.getNumRows());
 		frame.setVisible(true);
 		long timeElapsed = 0;
 		long startTime = System.currentTimeMillis();
@@ -178,7 +178,7 @@ public class Game extends JPanel {
 																	// in millliseconds, but whatever...
 			game.cat.Update(timeElapsed);
 			game.enemyManager.Update(timeElapsed);
-			if((timeElapsed) >= 1.0f/FPS) {
+			if((timeElapsed) >= 1.0f/(float)FPS) {
 				game.repaint();
 				timeElapsed = 0;
 				startTime = currentTime;

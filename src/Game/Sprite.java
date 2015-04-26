@@ -11,7 +11,7 @@ public class Sprite {
 	private BufferedImage texture;
 	private Vec2d position;
 	private int speed;
-	private Vec2d velocity;
+	protected Vec2d velocity;
 	private int rows;
 	private int columns;
 	private int framesPerSecond;
