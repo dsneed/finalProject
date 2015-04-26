@@ -206,7 +206,7 @@ public class Game extends JPanel {
 	}
 	
 	public int calculateAngle(int initPos, int newPos) {
-		return (newPos - initPos)/5;
+		return -1*(newPos - initPos)/5;
 	}
 	
 	public void addEvent(KeyEvent e) {
