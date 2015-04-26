@@ -68,7 +68,7 @@ public class Sprite {
 	}
 	
 	private void UpdateAnimation(float elapsedTime) {
-		if(timeSinceLastFrame >= getSecondsInFrame()) {
+		if(timeSinceLastFrame >= getNanoSecondsInFrame()) {
 			currentFrame++;
 			currentFrame = currentFrame % totalFrames;
 			timeSinceLastFrame = 0;
@@ -77,15 +77,15 @@ public class Sprite {
 	}
 	private void UpdatePosition(float elapsedTime) {
 		Vec2d newPosition = new Vec2d();
-		newPosition.x = position.x + speed*velocity.x*elapsedTime;
+		newPosition.x = position.x + (speed*velocity.x*elapsedTime)/(long)100000000;
 		newPosition.y = position.y + speed*velocity.y*elapsedTime;
 		// Check for if touching edge of screen (movementBounds)
 		position = newPosition;
 		boundingBox = CreateBoundingBox(position);
 	}
 	
-	private float getSecondsInFrame() {
-		return (float)1/(float)framesPerSecond;
+	private float getNanoSecondsInFrame() {
+		return ((float)1/(float)framesPerSecond)*1000000000;
 	}
 
 	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is

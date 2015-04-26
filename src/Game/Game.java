@@ -69,8 +69,9 @@ public class Game extends JPanel {
 
 	// Call all objects that need to be updated while keeping track of clock and inputs.
 	public void Update(long currentTime) {
-		long timeElapsed = (currentTime - previousTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
-																		// in millliseconds, but whatever...
+		long timeElapsed = (long)(currentTime - previousTime);
+		//System.out.println(currentTime + "previous: " + previousTime);
+		System.out.println("elapsed: " + (long)timeElapsed);
 		processInputs();
 		cat.Update(timeElapsed, getInputs());
 		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
@@ -355,7 +356,7 @@ public class Game extends JPanel {
 		
 		// Main game loop
 		while(true) {
-			game.Update(System.currentTimeMillis());
+			game.Update(System.nanoTime());
 		}
 	}
 }
