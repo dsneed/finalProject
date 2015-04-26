@@ -37,20 +37,31 @@ public class Game extends JPanel {
 	private ArrayList<String> inputs;
 	private boolean shouldClearInputs;	// boolean so that event listener and game loop don't interfere
 	LinkedList<KeyEvent> eventsQueue;
+	private long previousTime;
 	
 	public Game(String mapFile, String playerFile, String enemyFile){
 		this.mapFileName = mapFile;
 		this.playerFileName = playerFile;
 		this.enemyFileName = enemyFile;
 		this.inputs = new ArrayList<String>();
+		this.previousTime = System.currentTimeMillis();
 		this.addKeyListener(new InputListener(this));
 		eventsQueue = new LinkedList<KeyEvent>();
 		loadConfigFiles();
 		LoadComponents();
 	}
-	
-	public void Update() {
-		// TODO: Transfer stuff from main to here
+
+	public void Update(long currentTime) {
+		long timeElapsed = (currentTime - previousTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
+		// in millliseconds, but whatever...
+		processInputs();
+		cat.Update(timeElapsed, getInputs());
+		enemyManager.Update(timeElapsed);
+		if((timeElapsed) >= 1.0f/(float)FPS) {
+			repaint();
+			timeElapsed = 0;
+			previousTime = currentTime;
+		}
 	}
 	
 	public void loadConfigFiles() {
@@ -212,20 +223,15 @@ public class Game extends JPanel {
 		}
 
 		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-		}
+		public void keyTyped(KeyEvent e) { }
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
 			game.addEvent(e);
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-			//System.out.println("wtf");
 			game.clearInputs(true);
 		}
 	}
@@ -238,21 +244,10 @@ public class Game extends JPanel {
 		frame.add(game);
 		frame.setSize(1000, CELL_LENGTH*game.getNumRows());
 		frame.setVisible(true);
-		long timeElapsed = 0;
-		long startTime = System.currentTimeMillis();
-		long currentTime = System.currentTimeMillis();
+		
+		// Main game loop
 		while(true) {
-			timeElapsed = (currentTime - startTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
-																	// in millliseconds, but whatever...
-			game.processInputs();
-			game.cat.Update(timeElapsed, game.getInputs());
-			game.enemyManager.Update(timeElapsed);
-			if((timeElapsed) >= 1.0f/(float)FPS) {
-				game.repaint();
-				timeElapsed = 0;
-				startTime = currentTime;
-			}
-			currentTime = System.currentTimeMillis();
+			game.Update(System.currentTimeMillis());
 		}
 	}
 }
