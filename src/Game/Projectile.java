@@ -28,8 +28,9 @@ public class Projectile extends Sprite {
 		}
 	}
 	
-	
-
+	public void Update(float elapsedTime) {
+		super.Update(elapsedTime);
+	}
 	
 	
 }
