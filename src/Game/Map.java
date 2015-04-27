@@ -27,6 +27,7 @@ public class Map extends JPanel {
 	private final int MAX_CELLS = 100;
 	
 	private String[][] map = new String[MAX_CELLS][MAX_CELLS];
+	private ArrayList<Wall> walls;
 	private int numRows;
 	private int numColumns;
 	private int numWalls;
@@ -35,6 +36,8 @@ public class Map extends JPanel {
 	private String playerFilename;
 	private String weaponFilename;
 	private String projectileFilename;
+	private String wallFilename;
+	private BufferedImage wallTexture;
 	private EnemyManager enemyManager;
 	private Player cat;
 	private Weapon slingshot;
@@ -47,12 +50,14 @@ public class Map extends JPanel {
 	LinkedList<MouseEvent> mouseQueue;
 	
 	public Map(String mapFilename, String playerFilename, String enemyFilename, String projectileFilename,
-			String weaponFilename){
+			String weaponFilename, String wallFilename){
+		this.walls = new ArrayList<Wall>();
 		this.mapFilename = mapFilename;
 		this.enemyFilename = enemyFilename;
 		this.projectileFilename = projectileFilename;
 		this.weaponFilename = weaponFilename;
 		this.playerFilename = playerFilename;
+		this.wallFilename = wallFilename;
 		this.previousTime = System.currentTimeMillis();
 		this.addKeyListener(new InputListener(this));
 		this.weaponListener = new WeaponListener(this);
@@ -62,6 +67,7 @@ public class Map extends JPanel {
 		shotFired = false;
 		keyQueue = new LinkedList<KeyEvent>();
 		mouseQueue = new LinkedList<MouseEvent>();
+		this.wallTexture = setupWallTexture();
 		
 		loadFiles();
 	}
@@ -110,6 +116,7 @@ public class Map extends JPanel {
 			for(String str: cells) {
 				if(str.equals("W")) {
 					map[row][column] = new String("W");
+					walls.add(new Wall(wallTexture, new Vec2d(column*CELL_SIZE, row*CELL_SIZE), 0, 1, 1, 0));
 					numWalls++;
 				}
 				else if(str.equals("T")) {
@@ -159,6 +166,17 @@ public class Map extends JPanel {
 		}
 		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(50, 50), 100, 1, 1, 15);		
 	}
+	
+	public BufferedImage setupWallTexture() {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(wallFilename));
+		} catch(IOException e) {
+			System.out.println("What?!");
+		}
+		
+		return img;
+	}
 
 	//For testing Sprite
 	public void loadCat() {
@@ -201,10 +219,10 @@ public class Map extends JPanel {
 				if(map[i][j].equals("T")) {
 					enemyManager.CreateEnemy(new Vec2d(j*CELL_SIZE, i*CELL_SIZE));
 				}
-				else if (map[i][j].equals("W")) {
-					//map[i][j].
-				}
 			}
+		}
+		for(Wall w: walls) {
+			w.draw(g);
 		}
 		enemyManager.Draw(g);
 		cat.Draw(g);

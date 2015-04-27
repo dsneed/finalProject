@@ -31,15 +31,18 @@ public class Game extends JFrame {
 	private String enemyFilename;
 	private String projectileFilename;
 	private String weaponFilename;
+	private String wallFilename;
 	private Map map;
 	
-	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile){
+	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, 
+			String weaponFile, String wallFile){
 		this.mapFilename = mapFile;
 		this.playerFilename = playerFile;
 		this.enemyFilename = enemyFile;
 		this.projectileFilename = projectileFile;
 		this.weaponFilename = weaponFile;
-		map = new Map(mapFile, playerFile, enemyFile, projectileFile, weaponFile);
+		this.wallFilename = wallFile;
+		map = new Map(mapFile, playerFile, enemyFile, projectileFile, weaponFile, wallFile);
 	}
 	
 	public void Update(long timeElapsed) {
@@ -52,7 +55,8 @@ public class Game extends JFrame {
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("src/TestLevel.csv", "assets/runningcat.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg");
+		Game game = new Game("src/TestLevel.csv", "assets/runningcat.png", "assets/enemy.png", "assets/projectile.png",
+				"assets/gun.jpg", "assets/wall.jpg");
 		game.getMap().setFocusable(true);	// To allow game to get keyboard inputs
 		game.add(game.map);
 		game.setSize(1000, CELL_SIZE*game.map.getNumRows());
