@@ -19,7 +19,6 @@ public class Projectile extends Sprite {
 	private void calculateVelocityFromAngle() {
 		velocity.x = Math.cos(Math.toRadians(initAngle));
 		velocity.y = Math.sin(Math.toRadians(initAngle));
-		System.out.println("velocity: " + velocity);
 		
 		// Normalize
 		double magnitude = Math.sqrt((velocity.x*velocity.x) + (velocity.y*velocity.y));
@@ -29,7 +28,9 @@ public class Projectile extends Sprite {
 		}
 	}
 	
+	@Override
 	public void Update(float elapsedTime) {
+		velocity.y += .0000003;
 		super.Update(elapsedTime);
 	}
 	

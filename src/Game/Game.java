@@ -47,6 +47,7 @@ public class Game extends JPanel {
 	private long previousTime;
 	private WeaponListener weaponListener;
 	private boolean shotFired;
+	private CollisionManager collisionManager;
 	
 	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile){
 		this.mapFileName = mapFile;
@@ -65,14 +66,14 @@ public class Game extends JPanel {
 		mouseQueue = new LinkedList<MouseEvent>();
 		loadConfigFiles();
 		LoadComponents();
+		this.collisionManager = new CollisionManager(null, enemyManager.getEnemies(), cat, slingshot.getProjectileManager());
 	}
 
 	// Call all objects that need to be updated while keeping track of clock and inputs.
 	public void Update(long currentTime) {
 		long timeElapsed = (long)(currentTime - previousTime);
-		//System.out.println(currentTime + "previous: " + previousTime);
-		System.out.println("elapsed: " + (long)timeElapsed);
 		processInputs();
+		collisionManager.Update();
 		cat.Update(timeElapsed, getInputs());
 		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
 		slingshot.Update(shotFired, angle, timeElapsed);

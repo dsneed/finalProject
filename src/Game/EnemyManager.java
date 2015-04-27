@@ -32,10 +32,11 @@ public class EnemyManager {
 	
 	public void Update(float elapsedTime) {
 		//position = newPosition;
-		for(Enemy p : enemies) {
-			p.Update(elapsedTime);
-			if(p.isBlocked()) {
-				DeleteEnemy(p);
+		for(Enemy e : enemies) {
+			e.Update(elapsedTime);
+			if(e.isDead()) {
+				DeleteEnemy(e);
+				return;
 			}
 		}
 	}

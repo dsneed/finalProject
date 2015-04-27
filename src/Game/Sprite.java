@@ -78,7 +78,7 @@ public class Sprite {
 	private void UpdatePosition(float elapsedTime) {
 		Vec2d newPosition = new Vec2d();
 		newPosition.x = position.x + (speed*velocity.x*elapsedTime)/(long)100000000;
-		newPosition.y = position.y + speed*velocity.y*elapsedTime;
+		newPosition.y = position.y + speed*velocity.y*elapsedTime/(long)100000000;
 		// Check for if touching edge of screen (movementBounds)
 		position = newPosition;
 		boundingBox = CreateBoundingBox(position);
@@ -90,8 +90,8 @@ public class Sprite {
 
 	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is
 	private Rectangle CreateBoundingBox(Vec2d newPosition) {
-		Rectangle boundingBox = new Rectangle(getWidth(), getHeight(), getWidth() + (int)newPosition.x,
-				getHeight() + (int)newPosition.y);
+		Rectangle boundingBox = new Rectangle((int)newPosition.x, (int)newPosition.y, getWidth(),
+				getHeight());
 		return boundingBox;
 	}
 	
@@ -100,6 +100,20 @@ public class Sprite {
 	}
 	
 	public boolean intersects(Sprite s) {
+		Rectangle box1 = this.boundingBox;
+		Rectangle box2 = s.getBoundingBox();
+		
+		if(!(box1.intersection(box2).isEmpty()))
+			return true;
+		
+		if(box1.x + this.getWidth() >= box2.x && box1.x <= box2.x + 
+				s.getWidth()) {
+			if(box1.y + this.getHeight() >= box2.y &&
+					box1.y <= box2.y + s.getHeight()) {
+				return true;
+			}
+		}
+				
 		//One rectangle is on left of the other
 		if(this.boundingBox.x > (s.getBoundingBox().x+s.getBoundingBox().width) || 
 				s.getBoundingBox().x > (this.boundingBox.x + this.boundingBox.width))

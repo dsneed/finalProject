@@ -4,6 +4,7 @@ package Game;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import com.sun.javafx.geom.Vec2d;
 
@@ -30,11 +31,12 @@ public class ProjectileManager {
 	}
 	
 	public void Update(float elapsedTime, Vec2d newPosition) {
-		position = newPosition; 
+		position = newPosition;
 		for(Projectile p : projectiles) {
 			p.Update(elapsedTime);
 			if(p.isBlocked()) {
 				DeleteProjectile(p);
+				return;
 			}
 		}
 	}
@@ -46,17 +48,16 @@ public class ProjectileManager {
 			p.Draw(g);
 		}
 	}
-	
+
 	public void CreateProjectile(int angle) {
-		Projectile p = new Projectile(angle, texture, position, speed, rows, columns, FPS);
-		projectiles.add(p);
+		projectiles.add(new Projectile(angle, texture, position, speed, rows, columns, FPS));
 	}
-	
+
 	public void DeleteProjectile(Projectile p) {
 		projectiles.remove(p);
 	}
-	
-	
+
+
 	public ArrayList<Projectile> ProjectilePath(int angle, int gravity, int velocity, Projectile intialProjectile){
 		projectilePath = new ArrayList<Projectile>();
 		return projectilePath;

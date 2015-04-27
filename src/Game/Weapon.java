@@ -48,5 +48,8 @@ public class Weapon extends Sprite {
 	public int getAngle() {
 		return angle;
 	}
+	public ProjectileManager getProjectileManager() {
+		return projectileManager;
+	}
 
 }
