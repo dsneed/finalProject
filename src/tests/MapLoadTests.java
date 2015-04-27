@@ -30,28 +30,26 @@ public class MapLoadTests {
 	public void testLevelDimensions() {
 		
 		//Test to see the board is expected size
-		assertEquals(NUM_COLUMNS, game.getNumColumns());
-		assertEquals(NUM_ROWS, game.getNumRows());
-		int totalCells = game.getNumRows() * game.getNumColumns();
+		assertEquals(NUM_COLUMNS, game.getMap().getNumColumns());
+		assertEquals(NUM_ROWS, game.getMap().getNumRows());
+		int totalCells = game.getMap().getNumRows() * game.getMap().getNumColumns();
 		assertEquals(680, totalCells);
 	}
 	
 	@Test
 	public void testWallLocations() {
 		//Test locations of some specific walls
-		assertTrue(game.isWallAt(0,0));
-		assertTrue(game.isWallAt(1,0));
-		assertTrue(game.isWallAt(0,1));
-		assertTrue(game.isWallAt(4,26));
+		assertTrue(game.getMap().isWallAt(0,0));
+		assertTrue(game.getMap().isWallAt(1,0));
+		assertTrue(game.getMap().isWallAt(0,1));
+		assertTrue(game.getMap().isWallAt(4,26));
 		
 		//Test the locations of the non-walls
-		assertFalse(game.isWallAt(2,2));
-		assertFalse(game.isWallAt(10,10));
-		assertFalse(game.isWallAt(15,12));
-		assertFalse(game.isWallAt(4,27));
+		assertFalse(game.getMap().isWallAt(2,2));
+		assertFalse(game.getMap().isWallAt(10,10));
+		assertFalse(game.getMap().isWallAt(15,12));
+		assertFalse(game.getMap().isWallAt(4,27));
 		
-		//Test number of total walls
-		assertEquals(game.getNumWalls(), 129); // This was the number of walls I counted
 	}
 	
 	@Test

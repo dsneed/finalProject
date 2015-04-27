@@ -11,5 +11,4 @@ public class Wall extends Sprite{
 		super(texture, initPosition, speed, rows, columns, FPS);
 		// TODO Auto-generated constructor stub
 	}
-
 }
