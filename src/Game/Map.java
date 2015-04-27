@@ -113,11 +113,11 @@ public class Map extends JPanel {
 				Sprite thisCell;
 
 				if (burst[i].charAt(0) == 'W') {
-					//thisCell = new Wall();
+					thisCell = new Wall();
 				} else if(burst[i].charAt(0) == 'T') {
-					//thisCell = new Enemy();
+					thisCell = new Enemy();
 				}
-				//thisRowList.add(thisCell);
+				thisRowList.add(thisCell);
 			}
 			map.add(thisRowList);
 			countCol++;
@@ -165,7 +165,7 @@ public class Map extends JPanel {
 		long timeElapsed = (currentTime - previousTime) / (long)100;	// For some reason dividing by 100 seems more accurate (I thought the time
 																		// in millliseconds, but whatever...
 		processInputs();
-		//cat.Update(timeElapsed, getInputs());
+		cat.Update(timeElapsed, getInputs());
 		enemyManager.Update(timeElapsed);
 		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
 		slingshot.Update(shotFired, angle, timeElapsed);
@@ -188,7 +188,7 @@ public class Map extends JPanel {
 		for(int i = 0; i < numRows; i++) {
 			for(int j = 0; j < numColumns; j++) {
 				if(map.get(i).get(j).equals("T")) {
-					//enemyManager.CreateEnemy(new Vec2d(j*CELL_SIZE, i*CELL_SIZE));
+					enemyManager.CreateEnemy(new Vec2d(j*CELL_SIZE, i*CELL_SIZE));
 				}
 				else if (map.get(i).get(j).equals("W")) {
 					// TODO: Draw wall
