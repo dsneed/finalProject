@@ -105,24 +105,7 @@ public class Sprite {
 		
 		if(!(box1.intersection(box2).isEmpty()))
 			return true;
-		
-		if(box1.x + this.getWidth() >= box2.x && box1.x <= box2.x + 
-				s.getWidth()) {
-			if(box1.y + this.getHeight() >= box2.y &&
-					box1.y <= box2.y + s.getHeight()) {
-				return true;
-			}
-		}
-				
-		//One rectangle is on left of the other
-		if(this.boundingBox.x > (s.getBoundingBox().x+s.getBoundingBox().width) || 
-				s.getBoundingBox().x > (this.boundingBox.x + this.boundingBox.width))
-			return false;
-		//One rectangle is on top of the other
-		if(this.boundingBox.y < (s.getBoundingBox().y+s.getBoundingBox().height) || 
-				s.getBoundingBox().y < (this.boundingBox.y + this.boundingBox.height))
-			return false;
-		return true;
+		return false;
 	}
 	
 	public int getWidth() {
