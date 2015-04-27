@@ -39,6 +39,7 @@ public class Game extends JPanel {
 	private String[][] layout = new String[MAX_CELLS][MAX_CELLS];
 	private Player cat;
 	private EnemyManager enemyManager;
+	private CollisionManager collisionManager;
 	private Weapon slingshot;
 	private ArrayList<String> inputs;
 	private boolean shouldClearInputs;	// boolean so that event listener and game loop don't interfere
@@ -47,7 +48,9 @@ public class Game extends JPanel {
 	private long previousTime;
 	private WeaponListener weaponListener;
 	private boolean shotFired;
-	
+	private ArrayList<Wall>walls;
+	private ProjectileManager projectileManager;
+	 
 	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile){
 		this.mapFileName = mapFile;
 		this.playerFileName = playerFile;
@@ -63,24 +66,28 @@ public class Game extends JPanel {
 		shotFired = false;
 		keyQueue = new LinkedList<KeyEvent>();
 		mouseQueue = new LinkedList<MouseEvent>();
+		this.walls = new ArrayList<Wall>();
 		loadConfigFiles();
 		LoadComponents();
+		this.collisionManager = new CollisionManager(walls, enemyManager, cat, slingshot);
+
 	}
 
 	// Call all objects that need to be updated while keeping track of clock and inputs.
 	public void Update(long currentTime) {
 		long timeElapsed = (long)(currentTime - previousTime);
-		//System.out.println(currentTime + "previous: " + previousTime);
-		System.out.println("elapsed: " + (long)timeElapsed);
 		processInputs();
 		cat.Update(timeElapsed, getInputs());
 		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
 		slingshot.Update(shotFired, angle, timeElapsed);
+		enemyManager.Update(timeElapsed);
+		collisionManager.Update();
+		
 		if(shotFired) {
 			shotFired = false;
 			weaponListener.resetValues();
 		}
-		enemyManager.Update(timeElapsed);
+		
 		if((timeElapsed) >= 1.0f/(float)FPS) {
 			repaint();
 			timeElapsed = 0;
@@ -122,7 +129,7 @@ public class Game extends JPanel {
 			System.out.println("Projectile file not found.");
 		}
 		
-		ProjectileManager projectileManager = new ProjectileManager(img, new Vec2d(50, 50), 150, 5, 5, 15);
+		projectileManager = new ProjectileManager(img, new Vec2d(50, 50), 150, 5, 5, 15);
 		
 		// Load weapon
 		BufferedImage img2 = null;

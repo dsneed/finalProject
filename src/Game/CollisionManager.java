@@ -2,18 +2,20 @@ package Game;
 
 import java.util.ArrayList;
 
+import com.sun.javafx.geom.Rectangle;
+
 public class CollisionManager {
 	private ArrayList<Wall> walls;
-	private ArrayList<Enemy> enemies;
-	private ProjectileManager projectileManager;
+	private EnemyManager enemyManager;
+	private Weapon weapon;
 	private Player player;
 	
-	public CollisionManager(ArrayList<Wall> walls, ArrayList<Enemy> enemies, 
-			Player player, ProjectileManager projectileManager){
+	public CollisionManager(ArrayList<Wall> walls, EnemyManager enemyManager, 
+			Player player, Weapon weapon){
 		this.walls = walls;
-		this.enemies = enemies;
+		this.enemyManager = enemyManager;
 		this.player = player;
-		this.projectileManager = projectileManager;
+		this.weapon = weapon;
 	}
 	
 	//Checks Player intersection with Walls
@@ -29,7 +31,7 @@ public class CollisionManager {
 	
 	//Checks Player intersection with Enemies
 	public boolean isEnemyHit() {
-		for(Enemy e: enemies) {
+		for(Enemy e: enemyManager.getEnemies()) {
 			if(player.intersects(e)) {
 				player.setIsBlocked(true);
 				return true;
@@ -41,7 +43,7 @@ public class CollisionManager {
 	//Checks Projectile intersection with Walls
 	public boolean checkProjectileToWall() {
 		for(Wall w: walls) {
-			for(Projectile p : projectileManager.getProjectiles()) {
+			for(Projectile p : weapon.getProjectileManager().getProjectiles()) {
 				if(p.intersects(w)) {
 					p.setIsBlocked(true);
 					return true;
@@ -52,15 +54,20 @@ public class CollisionManager {
 	}
 	
 	//Checks Projectile intersection with Enemies
-	public boolean checkProjectileToEnemy() {
-		for(Enemy e: enemies) {
-			for(Projectile p : projectileManager.getProjectiles()) {
+	private void checkProjectileToEnemy() {
+		for(Enemy e: enemyManager.getEnemies()) {
+			for(Projectile p : weapon.getProjectileManager().getProjectiles()) {
 				if(p.intersects(e)) {
 					p.setIsBlocked(true);
-					return true;
 				}
 			}
 		}
-		return false;
+	}
+
+	public void Update() {
+		checkProjectileToEnemy();
+		//checkProjectileToWall();
+		isEnemyHit();
+		//isWallHit();
 	}
 }

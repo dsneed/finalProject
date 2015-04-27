@@ -22,7 +22,8 @@ public class Sprite {
 	private int totalFrames;
 	private float timeSinceLastFrame;
 	private boolean isBlocked;
-		
+	private CollisionManager collisionManager;
+	
 	public Sprite(BufferedImage texture, Vec2d initPosition, int speed, int rows, int columns, int FPS) {
 		this.texture = texture;
 		this.position = initPosition;
@@ -77,11 +78,16 @@ public class Sprite {
 	}
 	private void UpdatePosition(float elapsedTime) {
 		Vec2d newPosition = new Vec2d();
+		
 		newPosition.x = position.x + (speed*velocity.x*elapsedTime)/(long)100000000;
-		newPosition.y = position.y + speed*velocity.y*elapsedTime;
-		// Check for if touching edge of screen (movementBounds)
+		newPosition.y = position.y + speed*velocity.y*elapsedTime/(long)100000000;
+		
+		//collisionManager.isEnemyHit();
+		
+		if(!isBlocked){
 		position = newPosition;
 		boundingBox = CreateBoundingBox(position);
+		}
 	}
 	
 	private float getNanoSecondsInFrame() {
@@ -90,7 +96,7 @@ public class Sprite {
 
 	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is
 	private Rectangle CreateBoundingBox(Vec2d newPosition) {
-		Rectangle boundingBox = new Rectangle(getWidth(), getHeight(), getWidth() + (int)newPosition.x,
+		Rectangle boundingBox = new Rectangle((int)newPosition.x, (int)newPosition.y, getWidth() + (int)newPosition.x,
 				getHeight() + (int)newPosition.y);
 		return boundingBox;
 	}
@@ -100,14 +106,31 @@ public class Sprite {
 	}
 	
 	public boolean intersects(Sprite s) {
+		/*if(this.boundingBox.intersectWith(s.getBoundingBox())) {
+			return true;
+		}
+		return false;
+		*/
 		//One rectangle is on left of the other
+		
+		if(this.boundingBox.x  >= s.getBoundingBox().x - this.getWidth() && this.boundingBox.x <= s.getBoundingBox().x + 
+				s.getWidth()) {
+			if(this.boundingBox.y >= s.getBoundingBox().y - this.getHeight() &&
+					this.boundingBox.y <= s.getBoundingBox().y + s.getHeight()) {
+				return true;
+			}
+		}
+						
 		if(this.boundingBox.x > (s.getBoundingBox().x+s.getBoundingBox().width) || 
-				s.getBoundingBox().x > (this.boundingBox.x + this.boundingBox.width))
+				s.getBoundingBox().x > (this.boundingBox.x + this.boundingBox.width)) {
 			return false;
+		}
 		//One rectangle is on top of the other
 		if(this.boundingBox.y < (s.getBoundingBox().y+s.getBoundingBox().height) || 
-				s.getBoundingBox().y < (this.boundingBox.y + this.boundingBox.height))
+				s.getBoundingBox().y < (this.boundingBox.y + this.boundingBox.height)) {
 			return false;
+		}
+		
 		return true;
 	}
 	

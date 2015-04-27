@@ -29,6 +29,11 @@ public class Projectile extends Sprite {
 		}
 	}
 	
+	public void Update(float elapsedTime) {
+		velocity.y += .000005;
+		super.Update(elapsedTime);
+	}
+	
 	
 
 	

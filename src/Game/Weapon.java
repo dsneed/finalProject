@@ -29,6 +29,7 @@ public class Weapon extends Sprite {
 		if(shotFired) {
 			FireShot();
 		}
+		
 		projectileManager.Update(elapsedTime, this.position);
 		super.Update(elapsedTime);
 	}
@@ -47,6 +48,9 @@ public class Weapon extends Sprite {
 	}
 	public int getAngle() {
 		return angle;
+	}
+	public ProjectileManager getProjectileManager() {
+		return projectileManager;
 	}
 
 }
