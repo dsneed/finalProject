@@ -24,8 +24,9 @@ import com.sun.javafx.geom.Vec2d;
 public class Map extends JPanel {
 	public static float FPS = 15;
 	private final int CELL_SIZE = 30;
+	private final int MAX_CELLS = 100;
 	
-	private ArrayList<ArrayList<Sprite>> map;
+	private String[][] map = new String[MAX_CELLS][MAX_CELLS];
 	private int numRows;
 	private int numColumns;
 	private int numWalls;
@@ -45,12 +46,13 @@ public class Map extends JPanel {
 	LinkedList<KeyEvent> keyQueue;
 	LinkedList<MouseEvent> mouseQueue;
 	
-	public Map(String mapFilename, String enemyFilename, String projectileFilename,
+	public Map(String mapFilename, String playerFilename, String enemyFilename, String projectileFilename,
 			String weaponFilename){
 		this.mapFilename = mapFilename;
 		this.enemyFilename = enemyFilename;
 		this.projectileFilename = projectileFilename;
 		this.weaponFilename = weaponFilename;
+		this.playerFilename = playerFilename;
 		this.previousTime = System.currentTimeMillis();
 		this.addKeyListener(new InputListener(this));
 		this.weaponListener = new WeaponListener(this);
@@ -71,6 +73,8 @@ public class Map extends JPanel {
 		} catch (BadConfigFormatException e) {
 			e.printStackTrace();
 		}
+		loadCat();
+		loadWeapon();
 	}
 	
 	public void loadEnemyManager(String enemyFilename) {
@@ -84,11 +88,6 @@ public class Map extends JPanel {
 	}
 
 	public void loadMap(String mapFilename) throws BadConfigFormatException {
-		map = new ArrayList<ArrayList<Sprite>>();
-		int col = -1;
-		int countRow = 0;
-		int countCol = 0;
-		
 		FileReader fileIn = null;
 		try {
 			fileIn = new FileReader(mapFilename);
@@ -96,36 +95,48 @@ public class Map extends JPanel {
 			System.out.println("File not found");
 		}
 		Scanner scan = new Scanner(fileIn);
-		while (scan.hasNextLine()) {
-			String current = scan.nextLine();
-			String[] burst = current.split(",");
-			if (col == -1) {
-				col = burst.length;
-			} else {
-				if (col != burst.length) {
-					throw new BadConfigFormatException(
-							"Error in layout format.");
+		String scannedData = "";
+		int row = 0;
+		String[] cells;
+		int column = 0;
+		numWalls = 0;
+		
+		while(scan.hasNextLine()) {
+			scannedData = scan.nextLine();
+			cells = scannedData.split(",");
+			
+			column = 0;
+			numColumns = 0;
+			for(String str: cells) {
+				if(str.equals("W")) {
+					map[row][column] = new String("W");
+					numWalls++;
 				}
-			}
-			ArrayList<Sprite> thisRowList = new ArrayList<>();
-			for (int i = 0; i < burst.length; i++) {
-				countRow++;
-				Sprite thisCell;
-
-				if (burst[i].charAt(0) == 'W') {
-					thisCell = new Wall();
-				} else if(burst[i].charAt(0) == 'T') {
-					thisCell = new Enemy();
+				else if(str.equals("T")) {
+					map[row][column] = new String("T");
 				}
-				thisRowList.add(thisCell);
+				else if(str.equals("A")) {
+					map[row][column] = new String("A");
+				}
+				else {
+					throw new BadConfigFormatException("Unrecognized objects in map file");
+				}
+				column++;
 			}
-			map.add(thisRowList);
-			countCol++;
+			if(numColumns != 0 && numColumns != column) {
+				throw new BadConfigFormatException("Uneven rows");
+			}
+			numColumns = column;
+			
+			row++;
+			numRows++;
 		}
-
-		numRows = countRow / col;
-		numColumns = col;
-		setSize(CELL_SIZE * numColumns,CELL_SIZE * numRows);
+		scan.close();
+		try {
+			fileIn.close();
+		} catch (IOException e) {
+			System.out.println("IOException");
+		}
 	}
 	
 	public void loadWeapon() {
@@ -187,11 +198,11 @@ public class Map extends JPanel {
 		
 		for(int i = 0; i < numRows; i++) {
 			for(int j = 0; j < numColumns; j++) {
-				if(map.get(i).get(j).equals("T")) {
+				if(map[i][j].equals("T")) {
 					enemyManager.CreateEnemy(new Vec2d(j*CELL_SIZE, i*CELL_SIZE));
 				}
-				else if (map.get(i).get(j).equals("W")) {
-					// TODO: Draw wall
+				else if (map[i][j].equals("W")) {
+					//map[i][j].
 				}
 			}
 		}
@@ -338,7 +349,7 @@ public class Map extends JPanel {
 	}
 	
 	public boolean isWallAt(int row, int col) {
-		if (map.get(row).get(col).equals("W")) {
+		if (map[row][col].equals("W")) {
 			return true;
 		}
 		return false;

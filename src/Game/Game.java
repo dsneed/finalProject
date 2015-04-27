@@ -39,7 +39,7 @@ public class Game extends JFrame {
 		this.enemyFilename = enemyFile;
 		this.projectileFilename = projectileFile;
 		this.weaponFilename = weaponFile;
-		map = new Map(mapFile, enemyFile, projectileFile, weaponFile);
+		map = new Map(mapFile, playerFile, enemyFile, projectileFile, weaponFile);
 	}
 	
 	public void Update(long timeElapsed) {
@@ -56,6 +56,7 @@ public class Game extends JFrame {
 		game.getMap().setFocusable(true);	// To allow game to get keyboard inputs
 		game.add(game.map);
 		game.setSize(1000, CELL_SIZE*game.map.getNumRows());
+		game.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		game.setVisible(true);
 		
 		// Main game loop
