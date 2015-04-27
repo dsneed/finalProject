@@ -17,8 +17,9 @@ public class Projectile extends Sprite {
 	private int col = 0;
 	
 	private void calculateVelocityFromAngle() {
-		velocity.x = Math.cos((double)initAngle);
-		velocity.y = Math.sin((double)initAngle);
+		velocity.x = Math.cos(Math.toRadians(initAngle));
+		velocity.y = Math.sin(Math.toRadians(initAngle));
+		System.out.println("velocity: " + velocity);
 		
 		// Normalize
 		double magnitude = Math.sqrt((velocity.x*velocity.x) + (velocity.y*velocity.y));

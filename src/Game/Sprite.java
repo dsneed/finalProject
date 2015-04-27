@@ -2,13 +2,15 @@ package Game;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import com.sun.javafx.geom.Rectangle;
 import com.sun.javafx.geom.Vec2d;
 
 public class Sprite {
-	private BufferedImage texture;
+	protected BufferedImage texture;
 	protected Vec2d position;
 	private int speed;
 	protected Vec2d velocity;
@@ -53,9 +55,20 @@ public class Sprite {
 		g.drawImage(sourceRectangle, (int)position.x, (int)position.y, null);
 		//spriteBatch.Draw(texture, destinationRectangle, sourceRectangle);
 	}
+	public void Draw(Graphics g, AffineTransform tx) {
+		int imageWidth = getWidth();
+		int imageHeight = getHeight();
+		
+		int currentRow = currentFrame / columns;
+		int currentColumn = currentFrame % columns;
+		
+		BufferedImage sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth, imageHeight);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		g.drawImage(op.filter(sourceRectangle, null), (int)position.x, (int)position.y, null);
+	}
 	
 	private void UpdateAnimation(float elapsedTime) {
-		if(timeSinceLastFrame >= getSecondsInFrame()) {
+		if(timeSinceLastFrame >= getNanoSecondsInFrame()) {
 			currentFrame++;
 			currentFrame = currentFrame % totalFrames;
 			timeSinceLastFrame = 0;
@@ -64,15 +77,15 @@ public class Sprite {
 	}
 	private void UpdatePosition(float elapsedTime) {
 		Vec2d newPosition = new Vec2d();
-		newPosition.x = position.x + speed*velocity.x*elapsedTime;
+		newPosition.x = position.x + (speed*velocity.x*elapsedTime)/(long)100000000;
 		newPosition.y = position.y + speed*velocity.y*elapsedTime;
 		// Check for if touching edge of screen (movementBounds)
 		position = newPosition;
 		boundingBox = CreateBoundingBox(position);
 	}
 	
-	private float getSecondsInFrame() {
-		return (float)1/(float)framesPerSecond;
+	private float getNanoSecondsInFrame() {
+		return ((float)1/(float)framesPerSecond)*1000000000;
 	}
 
 	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is
