@@ -24,7 +24,7 @@ import com.sun.javafx.geom.Vec2d;
 
 public class Game extends JPanel {
 	public static int MAX_CELLS = 100;
-	public static int CELL_LENGTH = 20;
+	public static int CELL_LENGTH = 40;
 	public static float FPS = 15;
 	
 	//private Timer timer; 
@@ -36,6 +36,7 @@ public class Game extends JPanel {
 	private String enemyFileName;
 	private String projectileFileName;
 	private String weaponFileName;
+	private String wallFileName;
 	private String[][] layout = new String[MAX_CELLS][MAX_CELLS];
 	private Player cat;
 	private EnemyManager enemyManager;
@@ -48,13 +49,15 @@ public class Game extends JPanel {
 	private WeaponListener weaponListener;
 	private boolean shotFired;
 	private CollisionManager collisionManager;
+	private WallManager wallManager;
 	
-	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile){
+	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile, String wallFile){
 		this.mapFileName = mapFile;
 		this.playerFileName = playerFile;
 		this.enemyFileName = enemyFile;
 		this.projectileFileName = projectileFile;
 		this.weaponFileName = weaponFile;
+		this.wallFileName = wallFile;
 		this.inputs = new ArrayList<String>();
 		this.previousTime = System.currentTimeMillis();
 		this.addKeyListener(new InputListener(this));
@@ -66,7 +69,7 @@ public class Game extends JPanel {
 		mouseQueue = new LinkedList<MouseEvent>();
 		loadConfigFiles();
 		LoadComponents();
-		this.collisionManager = new CollisionManager(null, enemyManager.getEnemies(), cat, slingshot.getProjectileManager());
+		this.collisionManager = new CollisionManager(wallManager.getWalls(), enemyManager.getEnemies(), cat, slingshot.getProjectileManager());
 	}
 
 	// Call all objects that need to be updated while keeping track of clock and inputs.
@@ -74,6 +77,7 @@ public class Game extends JPanel {
 		long timeElapsed = (long)(currentTime - previousTime);
 		processInputs();
 		collisionManager.Update();
+		wallManager.Update(timeElapsed);
 		cat.Update(timeElapsed, getInputs());
 		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
 		slingshot.Update(shotFired, angle, timeElapsed);
@@ -100,6 +104,7 @@ public class Game extends JPanel {
 	private void LoadComponents() {
 		loadCat();	// Load Player
 		loadEnemyManager();
+		loadWallManager();
 		loadWeapon();
 		// Load enemies and wall
 		for(int i = 0; i < numRows; i++) {
@@ -108,7 +113,7 @@ public class Game extends JPanel {
 					enemyManager.CreateEnemy(new Vec2d(j*CELL_LENGTH, i*CELL_LENGTH));
 				}
 				else if (layout[i][j].equals("W")) {
-					// TODO: Draw wall
+					wallManager.CreateWall(new Vec2d(j*CELL_LENGTH, i*CELL_LENGTH));
 				}
 			}
 		}
@@ -123,7 +128,7 @@ public class Game extends JPanel {
 			System.out.println("Projectile file not found.");
 		}
 		
-		ProjectileManager projectileManager = new ProjectileManager(img, new Vec2d(50, 50), 150, 5, 5, 15);
+		ProjectileManager projectileManager = new ProjectileManager(img, new Vec2d(50, 50), 150, 5, 5, (int)FPS);
 		
 		// Load weapon
 		BufferedImage img2 = null;
@@ -132,7 +137,7 @@ public class Game extends JPanel {
 		} catch(IOException e) {
 			System.out.println("Weapon file not found.");
 		}
-		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(50, 50), 100, 1, 1, 15);		
+		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(50, 50), 100, 1, 1, (int)FPS);		
 	}
 
 	//For testing Sprite
@@ -144,7 +149,7 @@ public class Game extends JPanel {
 			System.out.println("What?!");
 		}
 		
-		cat = new Player(img, new Vec2d(50, 50), 100, 4, 2, 15);
+		cat = new Player(img, new Vec2d(50, 50), 100, 4, 2, (int)FPS);
 	}
 	
 	public void loadEnemyManager() {
@@ -154,7 +159,17 @@ public class Game extends JPanel {
 		} catch(IOException e) {
 			System.out.println("What?!");
 		}
-		enemyManager = new EnemyManager(img, new Vec2d(50, 50), 50, 2, 5, 15);
+		enemyManager = new EnemyManager(img, new Vec2d(50, 50), 50, 2, 5, (int)FPS);
+	}
+	
+	public void loadWallManager() {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(wallFileName));
+		} catch(IOException e) {
+			System.out.println("What?!");
+		}
+		wallManager = new WallManager(img, new Vec2d(50, 50), 100, 1, 1, (int)FPS);
 	}
 
 	public void fillLayout(String fileName) throws BadConfigFormatException {
@@ -267,6 +282,7 @@ public class Game extends JPanel {
 		  cat.Draw(g);
 		  slingshot.Draw(g);
 		  enemyManager.Draw(g);
+		  wallManager.Draw(g);
 	}
 	
 	// Listen for movement input, which is then placed in a queue to be processed
@@ -349,7 +365,8 @@ public class Game extends JPanel {
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg");
+		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg",
+				"assets/block2.png");
 		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
 		frame.setSize(1000, CELL_LENGTH*game.getNumRows());

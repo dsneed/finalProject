@@ -36,10 +36,12 @@ public class CollisionManager {
 
 	//Checks Projectile intersection with Walls
 	private void checkProjectileToWall() {
-		for(Wall w: walls) {
-			for(Projectile p : projectileManager.getProjectiles()) {
-				if(p.intersects(w)) {
-					p.setIsBlocked(true);
+		if(!walls.isEmpty()) {
+			for(Wall w: walls) {
+				for(Projectile p : projectileManager.getProjectiles()) {
+					if(p.intersects(w)) {
+						p.setIsBlocked(true);
+					}
 				}
 			}
 		}
@@ -59,8 +61,8 @@ public class CollisionManager {
 
 	public void Update() {
 		checkProjectileToEnemy();
-		//checkProjectileToWall();
-		//isEnemyHit();
+		checkProjectileToWall();
+		isEnemyHit();
 		//isWallHit();
 	}
 }
