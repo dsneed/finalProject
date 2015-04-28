@@ -63,7 +63,7 @@ public class Sprite {
 		int currentRow = currentFrame / columns;
 		int currentColumn = currentFrame % columns;
 		
-		BufferedImage sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth, imageHeight);
+		BufferedImage sourceRectangle = texture.getSubimage(imageWidth*currentColumn*2, imageHeight*currentRow*2, imageWidth, imageHeight);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		g.drawImage(op.filter(sourceRectangle, null), (int)position.x, (int)position.y, null);
 	}

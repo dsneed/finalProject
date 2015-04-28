@@ -286,8 +286,11 @@ public class Game extends JPanel {
 		  wallManager.Draw(g);
 		  g.drawString(Integer.toString(slingshot.getAngle()),(int)slingshot.position.x,(int)slingshot.position.y);
 
+		  g.drawLine((int)slingshot.position.x, (int)slingshot.position.y,(int)slingshot.position.x * 200, (int)slingshot.position.y );
+		  int positionX = ((int)slingshot.position.x + 2000);
+		  int positionY = (int) ((int)slingshot.position.y + positionX*Math.tan(Math.toRadians(slingshot.getAngle())));
+		  g.drawLine((int)slingshot.position.x, (int)slingshot.position.y,positionX,positionY );
 	}
-	
 	// Listen for movement input, which is then placed in a queue to be processed
 	// in the game loop.
 	private class InputListener implements KeyListener {
@@ -318,6 +321,7 @@ public class Game extends JPanel {
 		private Game game;
 		private int initYPos;
 		private int newYPos;
+		private int newXPos;
 		
 		WeaponListener(Game game) {
 			super();
@@ -333,6 +337,7 @@ public class Game extends JPanel {
 		public void mousePressed(MouseEvent e) {
 			initYPos = e.getY();
 			newYPos = e.getY();
+			newXPos = e.getX();
 		}
 
 		@Override
@@ -352,6 +357,7 @@ public class Game extends JPanel {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			newYPos = e.getY();
+			newXPos = e.getX();
 		}
 		
 		public int getinitPos() {
@@ -363,7 +369,16 @@ public class Game extends JPanel {
 		public void resetValues() {
 			initYPos = 0;
 			newYPos = 0;
+			newXPos = 0;
 		}
+		
+		public int getXpos(){
+			return newXPos;
+		}
+		public int getYpos(){
+			return newYPos;
+		}
+		
 	}
 	
 	public static void main(String args[]) {
