@@ -112,6 +112,10 @@ public class Sprite {
 		return false;
 	}
 	
+	public void adjustPosition(float timeElapsed, Vec2d newVelocity) {
+		position.x -= (speed*newVelocity.x*timeElapsed)/(long)100000000;
+	}
+	
 	public int getWidth() {
 		return texture.getWidth() / columns;
 	}

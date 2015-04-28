@@ -13,6 +13,7 @@ public class Player extends Sprite {
 	}
 	
 	public void Update(float elapsedTime, ArrayList<String> inputs) {
+		Vec2d oldVelocity = velocity;
 		velocity.x = 0;
 		velocity.y = 0;
 		if(inputs != null) {
@@ -29,7 +30,14 @@ public class Player extends Sprite {
 				else if(i.equals("d")) {
 					velocity.x += 1;
 				}
+				System.out.println(velocity.x +  " " + oldVelocity.x);
 			}
+		}
+		
+		
+		if((velocity.x < 0 && oldVelocity.x >= 0) ||
+				(velocity.x > 0 && oldVelocity.x <= 0)) {
+			setIsBlocked(false);
 		}
 		
 
@@ -42,8 +50,8 @@ public class Player extends Sprite {
 	}
 
 	public void adjustPosition() {
-		position.y -= velocity.y*2;
-		position.x -= velocity.x*2;
+		position.y -= velocity.y;
+		position.x -= velocity.x;
 	}
 
 }

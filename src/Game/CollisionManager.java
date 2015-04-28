@@ -19,12 +19,13 @@ public class CollisionManager {
 	
 	//Checks Player intersection with Walls
 	private void isWallHit() {
+		//player.setIsBlocked(false);
 		for(Wall w: walls) {
 			if(player.intersects(w)) {
-				//player.setIsBlocked(true);
+				player.setIsBlocked(true);
 				//while(player.intersects(w)) {
-					//System.out.println("fdsa");
-					player.adjustPosition();
+				//System.out.println("fdsa");
+				player.adjustPosition();
 				//}
 				//player.setIsBlocked(false);
 			}

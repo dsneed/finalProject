@@ -51,6 +51,7 @@ public class Game extends JPanel {
 	private boolean shotFired;
 	private CollisionManager collisionManager;
 	private WallManager wallManager;
+	private Sprite background;
 	
 	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile, String wallFile){
 		this.mapFileName = mapFile;
@@ -88,24 +89,43 @@ public class Game extends JPanel {
 			weaponListener.resetValues();
 		}
 		enemyManager.Update(timeElapsed);
+		scrollingAdjust(timeElapsed);
 		if((timeElapsed) >= 1.0f/(float)FPS) {
 			repaint();
 			timeElapsed = 0;
 			previousTime = currentTime;
 		}
-		
-		scrollingAdjust();
 	}
 	
-	private void scrollingAdjust() {
+	private void scrollingAdjust(float elapsedTime) {
 		Vec2d velocity = cat.getVelocity();
 		float xPosition = cat.getBoundingBox().x;
 		
-		//if()
+		if(!cat.isBlocked()) {
+			cat.adjustPosition(elapsedTime, velocity);
+			for(Wall w : wallManager.getWalls()) {
+				w.adjustPosition(elapsedTime, velocity);
+			}
+			for(Enemy e : enemyManager.getEnemies()) {
+				e.adjustPosition(elapsedTime, velocity);
+			}
+			slingshot.adjustPosition(elapsedTime, velocity);
+			for(Projectile p : slingshot.getProjectileManager().getProjectiles()) {
+				p.adjustPosition(elapsedTime, velocity);
+			}
+		}
+		
+/*		if(Math.abs(background.position.x) <= 5) {
+			if(cat.getBoundingBox().x >= SCREEN_X/2) {
+				shouldMove = true;
+			}
+		}
+		
+		else if 
 		
 		if(xPosition >= SCREEN_X/2) {
 			// Adjust all velocities of all characters to -velocity
-		}
+		}*/
 	}
 	
 	public void loadConfigFiles() {
