@@ -113,7 +113,7 @@ public class Sprite {
 	}
 	
 	public void adjustPosition(float timeElapsed, Vec2d newVelocity) {
-		position.x -= (speed*newVelocity.x*timeElapsed)/(long)100000000;
+		position.x -= (newVelocity.x*timeElapsed)/(long)100000000;
 	}
 	
 	public int getWidth() {
@@ -124,6 +124,10 @@ public class Sprite {
 	}
 	public Rectangle getBoundingBox() {
 		return boundingBox;
+	}
+	
+	public int getSpeed() {
+		return speed;
 	}
 	
 	public Vec2d getVelocity() {

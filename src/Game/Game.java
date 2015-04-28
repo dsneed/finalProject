@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.awt.Color;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+import com.sun.javafx.geom.Rectangle;
 import com.sun.javafx.geom.Vec2d;
 
 public class Game extends JPanel {
@@ -51,7 +53,7 @@ public class Game extends JPanel {
 	private boolean shotFired;
 	private CollisionManager collisionManager;
 	private WallManager wallManager;
-	private Sprite background;
+	private Rectangle background;
 	
 	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile, String wallFile){
 		this.mapFileName = mapFile;
@@ -72,6 +74,7 @@ public class Game extends JPanel {
 		loadConfigFiles();
 		LoadComponents();
 		this.collisionManager = new CollisionManager(wallManager.getWalls(), enemyManager.getEnemies(), cat, slingshot.getProjectileManager());
+		this.background = new Rectangle(0, 0, numCols*CELL_LENGTH, numRows*CELL_LENGTH);
 	}
 
 	// Call all objects that need to be updated while keeping track of clock and inputs.
@@ -99,6 +102,9 @@ public class Game extends JPanel {
 	
 	private void scrollingAdjust(float elapsedTime) {
 		Vec2d velocity = cat.getVelocity();
+		velocity.x *= cat.getSpeed();
+		velocity.y *= cat.getSpeed();
+		System.out.println(velocity);
 		float xPosition = cat.getBoundingBox().x;
 		
 		if(!cat.isBlocked()) {
@@ -110,9 +116,11 @@ public class Game extends JPanel {
 				e.adjustPosition(elapsedTime, velocity);
 			}
 			slingshot.adjustPosition(elapsedTime, velocity);
-			for(Projectile p : slingshot.getProjectileManager().getProjectiles()) {
-				p.adjustPosition(elapsedTime, velocity);
-			}
+			//for(Projectile p : slingshot.getProjectileManager().getProjectiles()) {
+			//	p.adjustPosition(elapsedTime, velocity);
+			//}
+			
+			background.x -= elapsedTime*velocity.x/(long)100000000;
 		}
 		
 /*		if(Math.abs(background.position.x) <= 5) {
@@ -314,14 +322,16 @@ public class Game extends JPanel {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		  cat.Draw(g);
-		  slingshot.Draw(g);
-		  enemyManager.Draw(g);
-		  wallManager.Draw(g);
-		  g.drawString(Integer.toString(slingshot.getAngle()),(int)slingshot.position.x,(int)slingshot.position.y);
+		g.setColor(Color.BLACK);
+		g.fillRect(background.x, background.y, background.width, background.height);
+		cat.Draw(g);
+		slingshot.Draw(g);
+		enemyManager.Draw(g);
+		wallManager.Draw(g);
+		g.drawString(Integer.toString(slingshot.getAngle()),(int)slingshot.position.x,(int)slingshot.position.y);
 
 	}
-	
+
 	// Listen for movement input, which is then placed in a queue to be processed
 	// in the game loop.
 	private class InputListener implements KeyListener {
@@ -408,6 +418,8 @@ public class Game extends JPanel {
 		frame.add(game);
 		frame.setSize(SCREEN_X, CELL_LENGTH*game.getNumRows());
 		frame.setVisible(true);
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// Main game loop
 		while(true) {
