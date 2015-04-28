@@ -10,6 +10,7 @@ import com.sun.javafx.geom.Rectangle;
 import com.sun.javafx.geom.Vec2d;
 
 public class Sprite {
+	public static double GRAVITY_CONSTANT = Math.pow(10,-9);
 	protected BufferedImage texture;
 	protected Vec2d position;
 	private int speed;
