@@ -21,12 +21,12 @@ public class CollisionManager {
 	private void isWallHit() {
 		for(Wall w: walls) {
 			if(player.intersects(w)) {
-				player.setIsBlocked(true);
-				while(player.intersects(w)) {
+				//player.setIsBlocked(true);
+				//while(player.intersects(w)) {
 					//System.out.println("fdsa");
 					player.adjustPosition();
-				}
-				player.setIsBlocked(false);
+				//}
+				//player.setIsBlocked(false);
 			}
 		}
 	}

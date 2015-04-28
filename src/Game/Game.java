@@ -150,7 +150,7 @@ public class Game extends JPanel {
 			System.out.println("What?!");
 		}
 		
-		cat = new Player(img, new Vec2d(50, 50), 100, 4, 2, (int)FPS);
+		cat = new Player(img, new Vec2d(50, 50), 100, 2, 5, (int)FPS);
 	}
 	
 	public void loadEnemyManager() {
@@ -368,7 +368,7 @@ public class Game extends JPanel {
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "assets/runningcat.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg",
+		Game game = new Game("TestLevel.csv", "assets/enemy.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg",
 				"assets/block2.png");
 		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
