@@ -7,6 +7,7 @@ public class CollisionManager {
 	private ArrayList<Enemy> enemies;
 	private ProjectileManager projectileManager;
 	private Player player;
+	private Sprite sprite;
 	
 	public CollisionManager(ArrayList<Wall> walls, ArrayList<Enemy> enemies, 
 			Player player, ProjectileManager projectileManager){
@@ -21,6 +22,11 @@ public class CollisionManager {
 		for(Wall w: walls) {
 			if(player.intersects(w)) {
 				player.setIsBlocked(true);
+				while(player.intersects(w)) {
+					//System.out.println("fdsa");
+					player.adjustPosition();
+				}
+				player.setIsBlocked(false);
 			}
 		}
 	}
@@ -63,6 +69,6 @@ public class CollisionManager {
 		checkProjectileToEnemy();
 		checkProjectileToWall();
 		isEnemyHit();
-		//isWallHit();
+		isWallHit();
 	}
 }

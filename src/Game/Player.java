@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import com.sun.javafx.geom.Vec2d;
 
 public class Player extends Sprite {
-
+	
 	public Player(BufferedImage texture, Vec2d initPosition,
 			int speed, int rows, int columns, int FPS) {
 		super(texture, initPosition, speed, rows, columns, FPS);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void Update(float elapsedTime, ArrayList<String> inputs) {
@@ -32,12 +31,19 @@ public class Player extends Sprite {
 				}
 			}
 		}
+		
+
 		double magnitude = Math.sqrt((velocity.x*velocity.x) + (velocity.y*velocity.y));
 		if(magnitude != 0) {
 			velocity.x /= magnitude;
 			velocity.y /= magnitude;	
 		}
 		super.Update(elapsedTime);
+	}
+
+	public void adjustPosition() {
+		position.x -= velocity.x*2;
+		position.y -= velocity.y*2;
 	}
 
 }

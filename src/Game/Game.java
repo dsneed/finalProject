@@ -81,6 +81,7 @@ public class Game extends JPanel {
 		cat.Update(timeElapsed, getInputs());
 		int angle = calculateAngle(weaponListener.getinitPos(), weaponListener.getCurrentPos());
 		slingshot.Update(shotFired, angle, timeElapsed);
+
 		if(shotFired) {
 			shotFired = false;
 			weaponListener.resetValues();
@@ -283,6 +284,8 @@ public class Game extends JPanel {
 		  slingshot.Draw(g);
 		  enemyManager.Draw(g);
 		  wallManager.Draw(g);
+		  g.drawString(Integer.toString(slingshot.getAngle()),(int)slingshot.position.x,(int)slingshot.position.y);
+
 	}
 	
 	// Listen for movement input, which is then placed in a queue to be processed

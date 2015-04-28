@@ -29,6 +29,7 @@ public class Weapon extends Sprite {
 		if(shotFired) {
 			FireShot();
 		}
+		
 		projectileManager.Update(elapsedTime, this.position);
 		super.Update(elapsedTime);
 	}

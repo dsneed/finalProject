@@ -22,6 +22,7 @@ public class Sprite {
 	private int totalFrames;
 	private float timeSinceLastFrame;
 	private boolean isBlocked;
+	private Weapon weapon;
 		
 	public Sprite(BufferedImage texture, Vec2d initPosition, int speed, int rows, int columns, int FPS) {
 		this.texture = texture;
@@ -75,13 +76,16 @@ public class Sprite {
 		}
 		timeSinceLastFrame += elapsedTime;
 	}
+	
 	private void UpdatePosition(float elapsedTime) {
 		Vec2d newPosition = new Vec2d();
 		newPosition.x = position.x + (speed*velocity.x*elapsedTime)/(long)100000000;
 		newPosition.y = position.y + speed*velocity.y*elapsedTime/(long)100000000;
 		// Check for if touching edge of screen (movementBounds)
+		
 		position = newPosition;
 		boundingBox = CreateBoundingBox(position);
+		
 	}
 	
 	private float getNanoSecondsInFrame() {
