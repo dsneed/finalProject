@@ -95,7 +95,7 @@ public class Sprite {
 	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is
 	private Rectangle CreateBoundingBox(Vec2d newPosition) {
 		Rectangle boundingBox = new Rectangle((int)newPosition.x, (int)newPosition.y, getWidth(),
-				getHeight()*2);
+				getHeight());
 		return boundingBox;
 	}
 	

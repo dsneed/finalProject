@@ -285,7 +285,7 @@ public class Game extends JPanel {
 		  enemyManager.Draw(g);
 		  wallManager.Draw(g);
 		  
-		  g.drawString(Integer.toString(slingshot.getAngle()),(int) ((int)slingshot.position.x + slingshot.getLocationX()),(int)slingshot.position.y);
+		  g.drawString(Integer.toString(slingshot.getAngle()),(int) ((int)slingshot.position.x + slingshot.getLocationX()*3),(int) ((int)slingshot.position.y + slingshot.getLocationY()));
 
 		  g.drawLine((int) ((int)slingshot.position.x + slingshot.getLocationX()), (int) ((int)slingshot.position.y + slingshot.getLocationY()),(int)slingshot.position.x + 2000, (int)slingshot.position.y );
 		

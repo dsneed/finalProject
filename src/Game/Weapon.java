@@ -39,8 +39,8 @@ public class Weapon extends Sprite {
 	public void Draw(Graphics g) {
 		projectileManager.Draw(g);
 		double rotation = Math.toRadians(angle);
-		this.setLocationX(texture.getWidth() / 2);
-		this.setLocationY(texture.getHeight() / 2);
+		this.setLocationX(texture.getWidth());
+		this.setLocationY(texture.getHeight());
 		AffineTransform tx = AffineTransform.getRotateInstance(rotation, this.getLocationX(), this.getLocationY());
 		super.Draw(g, tx);
 	}
