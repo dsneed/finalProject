@@ -51,6 +51,7 @@ public class Game extends JPanel {
 	private long previousTime;
 	private WeaponListener weaponListener;
 	private boolean shotFired;
+	private boolean freeMove;
 	private CollisionManager collisionManager;
 	private WallManager wallManager;
 	private Rectangle background;
@@ -75,6 +76,7 @@ public class Game extends JPanel {
 		LoadComponents();
 		this.collisionManager = new CollisionManager(wallManager.getWalls(), enemyManager.getEnemies(), cat, slingshot.getProjectileManager());
 		this.background = new Rectangle(0, 0, numCols*CELL_LENGTH, numRows*CELL_LENGTH);
+		freeMove = false;
 	}
 
 	// Call all objects that need to be updated while keeping track of clock and inputs.
@@ -107,7 +109,20 @@ public class Game extends JPanel {
 		System.out.println(velocity);
 		float xPosition = cat.getBoundingBox().x;
 		
-		if(!cat.isBlocked()) {
+/*		if(Math.abs(background.x) <= 5) {
+			if(cat.getBoundingBox().x <= SCREEN_X/2) {
+				freeMove = true;
+			}
+		}
+		
+		else if (Math.abs(background.x) - (background.width - SCREEN_X) >= 5) {
+			if(cat.getBoundingBox().x >= SCREEN_X/2) {
+				freeMove = true;
+			}
+		}
+		else freeMove = false; */
+		
+		if(!cat.isBlocked() && !freeMove) {
 			cat.adjustPosition(elapsedTime, velocity);
 			for(Wall w : wallManager.getWalls()) {
 				w.adjustPosition(elapsedTime, velocity);
@@ -122,18 +137,7 @@ public class Game extends JPanel {
 			
 			background.x -= elapsedTime*velocity.x/(long)100000000;
 		}
-		
-/*		if(Math.abs(background.position.x) <= 5) {
-			if(cat.getBoundingBox().x >= SCREEN_X/2) {
-				shouldMove = true;
-			}
-		}
-		
-		else if 
-		
-		if(xPosition >= SCREEN_X/2) {
-			// Adjust all velocities of all characters to -velocity
-		}*/
+	
 	}
 	
 	public void loadConfigFiles() {
@@ -192,7 +196,7 @@ public class Game extends JPanel {
 			System.out.println("What?!");
 		}
 		
-		cat = new Player(img, new Vec2d(400, 250), 100, 2, 5, (int)FPS);
+		cat = new Player(img, new Vec2d(500, numRows*CELL_LENGTH - img.getHeight()), 75, 2, 5, (int)FPS);
 	}
 	
 	public void loadEnemyManager() {
@@ -322,13 +326,14 @@ public class Game extends JPanel {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.BLACK);
+		g.setColor(Color.CYAN);
 		g.fillRect(background.x, background.y, background.width, background.height);
 		cat.Draw(g);
 		slingshot.Draw(g);
 		enemyManager.Draw(g);
 		wallManager.Draw(g);
-		g.drawString(Integer.toString(slingshot.getAngle()),(int)slingshot.position.x,(int)slingshot.position.y);
+		g.setColor(Color.BLACK);
+		g.drawString(Integer.toString(slingshot.getAngle()*-1),(int)slingshot.position.x,(int)slingshot.position.y);
 
 	}
 
@@ -412,7 +417,7 @@ public class Game extends JPanel {
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "assets/enemy.png", "assets/enemy.png", "assets/projectile.png", "assets/gunSmall.png",
+		Game game = new Game("map.csv", "assets/enemy.png", "assets/enemy.png", "assets/projectile.png", "assets/gunSmall.png",
 				"assets/block2.png");
 		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
