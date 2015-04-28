@@ -18,13 +18,13 @@ public class Player extends Sprite {
 		if(inputs != null) {
 			for(String i : inputs) {
 				if(i.equals("w")) {
-					// TODO: Nothing??
+					velocity.y += -1;
 				}
 				else if(i.equals("a")) {
 					velocity.x += -1;
 				}
 				else if(i.equals("s")) {
-					// TODO: Nothing??
+					velocity.y += 1;
 				}
 				else if(i.equals("d")) {
 					velocity.x += 1;

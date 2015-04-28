@@ -10,6 +10,8 @@ public class Weapon extends Sprite {
 	private ProjectileManager projectileManager;
 	private Player player;
 	private int angle;
+	private double locationX;
+	private double locationY;
 	
 	public Weapon(Player player, ProjectileManager projectileManager, BufferedImage texture, Vec2d initPosition, int speed,
 			int rows, int columns, int FPS) {
@@ -37,9 +39,9 @@ public class Weapon extends Sprite {
 	public void Draw(Graphics g) {
 		projectileManager.Draw(g);
 		double rotation = Math.toRadians(angle);
-		double locationX = texture.getWidth() / 2;
-		double locationY = texture.getHeight() / 2;
-		AffineTransform tx = AffineTransform.getRotateInstance(rotation, locationX, locationY);
+		this.setLocationX(texture.getWidth() / 2);
+		this.setLocationY(texture.getHeight() / 2);
+		AffineTransform tx = AffineTransform.getRotateInstance(rotation, this.getLocationX(), this.getLocationY());
 		super.Draw(g, tx);
 	}
 	
@@ -51,6 +53,22 @@ public class Weapon extends Sprite {
 	}
 	public ProjectileManager getProjectileManager() {
 		return projectileManager;
+	}
+
+	public double getLocationX() {
+		return locationX;
+	}
+
+	public void setLocationX(double locationX) {
+		this.locationX = locationX;
+	}
+
+	public double getLocationY() {
+		return locationY;
+	}
+
+	public void setLocationY(double locationY) {
+		this.locationY = locationY;
 	}
 
 }

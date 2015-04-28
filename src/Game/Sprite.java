@@ -45,7 +45,7 @@ public class Sprite {
 	}
 	
 	public void Draw(Graphics g) {
-		int imageWidth = getWidth();
+		int imageWidth = getWidth() ;
 		int imageHeight = getHeight();
 		
 		int currentRow = currentFrame / columns;
@@ -95,7 +95,7 @@ public class Sprite {
 	// Creates a new bounding box to define Sprite (for collision purposes) based on where the Sprite currently is
 	private Rectangle CreateBoundingBox(Vec2d newPosition) {
 		Rectangle boundingBox = new Rectangle((int)newPosition.x, (int)newPosition.y, getWidth(),
-				getHeight());
+				getHeight()*2);
 		return boundingBox;
 	}
 	

@@ -284,12 +284,14 @@ public class Game extends JPanel {
 		  slingshot.Draw(g);
 		  enemyManager.Draw(g);
 		  wallManager.Draw(g);
-		  g.drawString(Integer.toString(slingshot.getAngle()),(int)slingshot.position.x,(int)slingshot.position.y);
+		  
+		  g.drawString(Integer.toString(slingshot.getAngle()),(int) ((int)slingshot.position.x + slingshot.getLocationX()),(int)slingshot.position.y);
 
-		  g.drawLine((int)slingshot.position.x, (int)slingshot.position.y,(int)slingshot.position.x * 200, (int)slingshot.position.y );
+		  g.drawLine((int) ((int)slingshot.position.x + slingshot.getLocationX()), (int) ((int)slingshot.position.y + slingshot.getLocationY()),(int)slingshot.position.x + 2000, (int)slingshot.position.y );
+		
 		  int positionX = ((int)slingshot.position.x + 2000);
 		  int positionY = (int) ((int)slingshot.position.y + positionX*Math.tan(Math.toRadians(slingshot.getAngle())));
-		  g.drawLine((int)slingshot.position.x, (int)slingshot.position.y,positionX,positionY );
+		  g.drawLine((int)((int)slingshot.position.x + slingshot.getLocationX()) , (int)(slingshot.position.y + slingshot.getLocationY()),positionX,positionY );
 	}
 	// Listen for movement input, which is then placed in a queue to be processed
 	// in the game loop.
@@ -371,19 +373,11 @@ public class Game extends JPanel {
 			newYPos = 0;
 			newXPos = 0;
 		}
-		
-		public int getXpos(){
-			return newXPos;
-		}
-		public int getYpos(){
-			return newYPos;
-		}
-		
 	}
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "assets/enemy.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg",
+		Game game = new Game("testLevel.csv", "assets/enemy.png", "assets/target.png", "assets/projectile.png", "assets/gunSmall.png",
 				"assets/block2.png");
 		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
