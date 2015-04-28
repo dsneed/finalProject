@@ -25,6 +25,7 @@ import com.sun.javafx.geom.Vec2d;
 public class Game extends JPanel {
 	public static int MAX_CELLS = 100;
 	public static int CELL_LENGTH = 40;
+	public static int SCREEN_X = 1000;
 	public static float FPS = 15;
 	
 	//private Timer timer; 
@@ -92,6 +93,19 @@ public class Game extends JPanel {
 			timeElapsed = 0;
 			previousTime = currentTime;
 		}
+		
+		scrollingAdjust();
+	}
+	
+	private void scrollingAdjust() {
+		Vec2d velocity = cat.getVelocity();
+		float xPosition = cat.getBoundingBox().x;
+		
+		//if()
+		
+		if(xPosition >= SCREEN_X/2) {
+			// Adjust all velocities of all characters to -velocity
+		}
 	}
 	
 	public void loadConfigFiles() {
@@ -138,7 +152,7 @@ public class Game extends JPanel {
 		} catch(IOException e) {
 			System.out.println("Weapon file not found.");
 		}
-		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(50, 50), 100, 1, 1, (int)FPS);		
+		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(400, 250), 100, 1, 1, (int)FPS);		
 	}
 
 	//For testing Sprite
@@ -150,7 +164,7 @@ public class Game extends JPanel {
 			System.out.println("What?!");
 		}
 		
-		cat = new Player(img, new Vec2d(50, 50), 100, 2, 5, (int)FPS);
+		cat = new Player(img, new Vec2d(400, 250), 100, 2, 5, (int)FPS);
 	}
 	
 	public void loadEnemyManager() {
@@ -368,11 +382,11 @@ public class Game extends JPanel {
 	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
-		Game game = new Game("TestLevel.csv", "assets/enemy.png", "assets/enemy.png", "assets/projectile.png", "assets/gun.jpg",
+		Game game = new Game("TestLevel.csv", "assets/enemy.png", "assets/enemy.png", "assets/projectile.png", "assets/gunSmall.png",
 				"assets/block2.png");
 		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
-		frame.setSize(1000, CELL_LENGTH*game.getNumRows());
+		frame.setSize(SCREEN_X, CELL_LENGTH*game.getNumRows());
 		frame.setVisible(true);
 		
 		// Main game loop

@@ -26,6 +26,8 @@ public class Weapon extends Sprite {
 	public void Update(boolean shotFired, int angle, float elapsedTime) {
 		this.angle = angle;
 		this.velocity = player.velocity;
+		this.position = player.position;
+		setIsBlocked(true);
 		if(shotFired) {
 			FireShot();
 		}

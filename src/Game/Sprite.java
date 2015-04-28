@@ -122,6 +122,10 @@ public class Sprite {
 		return boundingBox;
 	}
 	
+	public Vec2d getVelocity() {
+		return velocity;
+	}
+	
 	public void setIsBlocked(boolean newVal) {
 		isBlocked = newVal;
 	}

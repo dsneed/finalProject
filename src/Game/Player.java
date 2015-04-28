@@ -45,7 +45,6 @@ public class Player extends Sprite {
 	public void adjustPosition() {
 		position.y -= velocity.y*2;
 		position.x -= velocity.x*2;
-		//position.y -= velocity.y*3;
 	}
 
 }
