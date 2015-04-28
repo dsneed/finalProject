@@ -30,7 +30,7 @@ public class Projectile extends Sprite {
 	
 	@Override
 	public void Update(float elapsedTime) {
-		velocity.y += .000006;
+		velocity.y += .00003;
 		super.Update(elapsedTime);
 	}
 	
