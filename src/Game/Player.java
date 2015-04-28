@@ -1,5 +1,7 @@
 package Game;
 
+import java.awt.Graphics;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -40,7 +42,6 @@ public class Player extends Sprite {
 			setIsBlocked(false);
 		}
 		
-
 		double magnitude = Math.sqrt((velocity.x*velocity.x) + (velocity.y*velocity.y));
 		if(magnitude != 0) {
 			velocity.x /= magnitude;
@@ -51,7 +52,14 @@ public class Player extends Sprite {
 
 	public void adjustPosition() {
 		//position.y -= velocity.y;
-		position.x -= velocity.x/Math.abs(velocity.x);
+		if(velocity.x != 0)
+			position.x -= velocity.x/Math.abs(velocity.x);
+	}
+	
+	public void Draw(Graphics g) {
+		AffineTransform  tx = AffineTransform.getScaleInstance(-1,  1);
+		tx.translate(-texture.getWidth()/4, 0);
+		super.Draw(g, tx);
 	}
 
 }

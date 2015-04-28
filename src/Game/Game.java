@@ -26,7 +26,7 @@ import com.sun.javafx.geom.Vec2d;
 
 public class Game extends JPanel {
 	public static int MAX_CELLS = 100;
-	public static int CELL_LENGTH = 40;
+	public static int CELL_LENGTH = 30;
 	public static int SCREEN_X = 1000;
 	public static float FPS = 15;
 	
@@ -54,6 +54,7 @@ public class Game extends JPanel {
 	private boolean freeMove;
 	private CollisionManager collisionManager;
 	private WallManager wallManager;
+	private boolean mouseDown;
 	private Rectangle background;
 	
 	public Game(String mapFile, String playerFile, String enemyFile, String projectileFile, String weaponFile, String wallFile){
@@ -74,6 +75,7 @@ public class Game extends JPanel {
 		mouseQueue = new LinkedList<MouseEvent>();
 		loadConfigFiles();
 		LoadComponents();
+		mouseDown = false;
 		this.collisionManager = new CollisionManager(wallManager.getWalls(), enemyManager.getEnemies(), cat, slingshot.getProjectileManager());
 		this.background = new Rectangle(0, 0, numCols*CELL_LENGTH, numRows*CELL_LENGTH);
 		freeMove = false;
@@ -106,7 +108,6 @@ public class Game extends JPanel {
 		Vec2d velocity = cat.getVelocity();
 		velocity.x *= cat.getSpeed();
 		velocity.y *= cat.getSpeed();
-		System.out.println(velocity);
 		float xPosition = cat.getBoundingBox().x;
 		
 /*		if(Math.abs(background.x) <= 5) {
@@ -175,7 +176,7 @@ public class Game extends JPanel {
 			System.out.println("Projectile file not found.");
 		}
 		
-		ProjectileManager projectileManager = new ProjectileManager(img, new Vec2d(50, 50), 150, 5, 5, (int)FPS);
+		ProjectileManager projectileManager = new ProjectileManager(img, new Vec2d(50, 50), 140, 1, 1, (int)FPS);
 		
 		// Load weapon
 		BufferedImage img2 = null;
@@ -184,7 +185,7 @@ public class Game extends JPanel {
 		} catch(IOException e) {
 			System.out.println("Weapon file not found.");
 		}
-		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(400, 250), 100, 1, 1, (int)FPS);		
+		slingshot = new Weapon(cat, projectileManager, img2, new Vec2d(cat.getBoundingBox().x + cat.getBoundingBox().width/2, cat.getBoundingBox().y + cat.getBoundingBox().height/2), 75, 1, 1, (int)FPS);		
 	}
 
 	//For testing Sprite
@@ -195,8 +196,7 @@ public class Game extends JPanel {
 		} catch(IOException e) {
 			System.out.println("What?!");
 		}
-		
-		cat = new Player(img, new Vec2d(500, numRows*CELL_LENGTH - img.getHeight()), 75, 2, 5, (int)FPS);
+		cat = new Player(img, new Vec2d(200, numRows*CELL_LENGTH - img.getHeight()/2 - 100), 75, 1, 4, (int)FPS/2);
 	}
 	
 	public void loadEnemyManager() {
@@ -302,8 +302,16 @@ public class Game extends JPanel {
 		shotFired = val;
 	}
 	
+	public void setMouse(boolean val) {
+		mouseDown = val;
+	}
+	
 	public ArrayList<String> getInputs() {
 		return inputs;
+	}
+	
+	public EnemyManager getEnemyManager() {
+		return enemyManager;
 	}
 	
 	public boolean shouldClearInputs() {
@@ -334,6 +342,22 @@ public class Game extends JPanel {
 		wallManager.Draw(g);
 		g.setColor(Color.BLACK);
 		g.drawString(Integer.toString(slingshot.getAngle()*-1),(int)slingshot.position.x,(int)slingshot.position.y);
+
+		if(mouseDown) {
+			g.drawLine((int)slingshot.position.x + slingshot.getLocationX(), (int)slingshot.position.y + slingshot.getLocationY(),(int)slingshot.position.x * 200, (int)slingshot.position.y );
+			if(slingshot.getAngle() < 90) {
+				int positionX = ((int)slingshot.position.x + 2000);
+				int positionY = (int) ((int)slingshot.position.y + positionX*Math.tan(Math.toRadians(slingshot.getAngle())));
+				g.drawLine((int)((int)slingshot.position.x + slingshot.getLocationX()) , (int)(slingshot.position.y + slingshot.getLocationY()),positionX,positionY );
+			}
+			else if (slingshot.getAngle() >= 90) {
+				int positionY = (int) ((int)slingshot.position.y - 2000);
+				int positionX = (int) ((int)slingshot.position.x - positionY*Math.tan(Math.toRadians(slingshot.getAngle())));
+				g.drawLine((int)((int)slingshot.position.x + slingshot.getLocationX()) , (int)(slingshot.position.y + slingshot.getLocationY()),
+						positionX,positionY );
+
+			}
+		}
 
 	}
 
@@ -387,6 +411,7 @@ public class Game extends JPanel {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			game.shotFired(true);
+			game.setMouse(false);
 		}
 
 		@Override
@@ -401,6 +426,7 @@ public class Game extends JPanel {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			newYPos = e.getY();
+			game.setMouse(true);
 		}
 		
 		public int getinitPos() {
@@ -416,19 +442,36 @@ public class Game extends JPanel {
 	}
 	
 	public static void main(String args[]) {
+
+		
 		JFrame frame = new JFrame();
-		Game game = new Game("map.csv", "assets/enemy.png", "assets/enemy.png", "assets/projectile.png", "assets/gunSmall.png",
-				"assets/block2.png");
+		Game game = new Game("map.csv", "assets/dragon.png", "assets/enemy.png", "assets/bullet.png", "assets/gunSmall.png",
+				"assets/wallTexture.png");
 		game.setFocusable(true);	// To allow game to get keyboard inputs
 		frame.add(game);
-		frame.setSize(SCREEN_X, CELL_LENGTH*game.getNumRows());
+		frame.setSize(SCREEN_X, CELL_LENGTH*game.getNumRows() + 40);
 		frame.setVisible(true);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		JFrame frame3 = new JFrame();
+		StartMessage message = new StartMessage();
+		frame3.setSize(200, 100);
+		frame3.setVisible(true);
+		frame3.add(message);
+		
 		// Main game loop
 		while(true) {
 			game.Update(System.nanoTime());
+			if(game.getEnemyManager().getEnemies().isEmpty()) {
+				break;
+			}
 		}
+		frame.setVisible(false);
+		JFrame frame2 = new JFrame();
+		Quiz quiz = new Quiz();
+		frame2.setSize(quiz.getSize());
+		frame2.setVisible(true);
+		frame2.add(quiz);
 	}
 }

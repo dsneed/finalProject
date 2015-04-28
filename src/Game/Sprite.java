@@ -47,13 +47,18 @@ public class Sprite {
 	public void Draw(Graphics g) {
 		int imageWidth = getWidth();
 		int imageHeight = getHeight();
-		
-		int currentRow = currentFrame / columns;
-		int currentColumn = currentFrame % columns;
-		
-		Image sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth, imageHeight);
-		//Rectangle destinationRectangle = new Rectangle((int) position.x, (int) position.y, imageWidth, imageHeight);
-		g.drawImage(sourceRectangle, (int)position.x, (int)position.y, null);
+
+		if(totalFrames > 1) {
+			int currentRow = currentFrame / columns;
+			int currentColumn = currentFrame % columns;
+
+			Image sourceRectangle = texture.getSubimage(imageWidth*currentColumn, imageHeight*currentRow, imageWidth, imageHeight);
+			//Rectangle destinationRectangle = new Rectangle((int) position.x, (int) position.y, imageWidth, imageHeight);
+			g.drawImage(sourceRectangle, (int)position.x, (int)position.y, null);
+		}
+		else {
+			g.drawImage(texture, (int)position.x, (int)position.y, null);
+		}
 		//spriteBatch.Draw(texture, destinationRectangle, sourceRectangle);
 	}
 	public void Draw(Graphics g, AffineTransform tx) {
