@@ -37,6 +37,7 @@ public class Player extends Sprite {
 		if(magnitude != 0) {
 			velocity.x /= magnitude;
 			velocity.y /= magnitude;	
+			
 		}
 		super.Update(elapsedTime);
 	}
